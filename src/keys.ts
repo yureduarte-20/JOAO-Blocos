@@ -19,3 +19,9 @@ export namespace PasswordHasherBindings {
 export namespace JudgeServiceBindings {
   export const JUDGE = BindingKey.create<JudgeService>('services.judge')
 }
+
+export const enum Roles {
+  ADMIN = 'ADMIN',
+  COLLABORATOR = 'COLLABORATOR',
+  CONSUMER = 'CONSUMER'
+}

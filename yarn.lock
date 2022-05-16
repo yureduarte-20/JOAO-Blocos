@@ -316,6 +316,15 @@
     lodash "^4.17.21"
     tslib "^2.3.1"
 
+"@loopback/authorization@^0.12.0":
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/@loopback/authorization/-/authorization-0.12.0.tgz#f65429bc93246c42037e7d4431c59233471e7a46"
+  integrity sha512-EsprB6JMuD7Z08cQH8Ls2mAMe5IKyHsBiA6oON7B96OeqnoXPOzh4uixQriP/Sj4mOorP782gW6L/LQVUk+ilA==
+  dependencies:
+    "@loopback/security" "^0.8.0"
+    debug "^4.3.4"
+    tslib "^2.4.0"
+
 "@loopback/boot@^4.1.2":
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/@loopback/boot/-/boot-4.1.2.tgz#cfc6986f2a29bd7efc4704f8c46b59ecd3bfac15"
@@ -522,6 +531,14 @@
   dependencies:
     debug "^4.3.4"
     tslib "^2.3.1"
+
+"@loopback/security@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@loopback/security/-/security-0.8.0.tgz#c13b3de8c18f7f0d3ede4070c932dcb8dae646cd"
+  integrity sha512-V5cqT8epggIENjElhq3IgcMOQ/2lm2j5G1KU0KH0j7zyCeHFyAAt4/JYKbkpMl0Joyf9YpnE2qyBcQa6rpPrNw==
+  dependencies:
+    debug "^4.3.4"
+    tslib "^2.4.0"
 
 "@loopback/service-proxy@^4.1.2":
   version "4.1.2"
@@ -3820,7 +3837,7 @@ tslib@^1.8.1:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
 
-tslib@^2.0.0, tslib@^2.0.3, tslib@^2.3.1:
+tslib@^2.0.0, tslib@^2.0.3, tslib@^2.3.1, tslib@^2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.4.0.tgz#7cecaa7f073ce680a05847aa77be941098f36dc3"
   integrity sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==

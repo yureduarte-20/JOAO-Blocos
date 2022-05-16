@@ -1,10 +1,8 @@
 {
   "ids": {
-    "User": 7
+    "User": 1
   },
   "models": {
-    "User": {
-      "1": "{\"name\":\"yure\",\"email\":\"yue@gmail.com\",\"password\":\"$2a$10$hv9.BEzBaUvepvEadcfmbOpYcY/d2sZdQwuk981DBMILEd/mLik7i\",\"id\":\"1\"}"
-    }
+    "User": {}
   }
 }

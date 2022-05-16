@@ -1,10 +1,11 @@
 // Uncomment these imports to begin using these cool features!
 
 import {authenticate, AuthenticationBindings} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 import {inject} from '@loopback/core';
 import {HttpErrors, post, requestBody, response} from '@loopback/rest';
 import {UserProfile} from '@loopback/security';
-import {JudgeServiceBindings} from '../keys';
+import {JudgeServiceBindings, Roles} from '../keys';
 import {JudgeService} from '../services/judge.service';
 
 class CompilationHttpError extends HttpErrors.UnprocessableEntity {
@@ -38,6 +39,7 @@ export class SubmissionController {
     private judgeService: JudgeService
   ) { }
 
+  @authorize({allowedRoles: [Roles.ADMIN, Roles.COLLABORATOR, Roles.CONSUMER]})
   @post('/submission')
   @response(200, {
     description: 'execution of javascript code'

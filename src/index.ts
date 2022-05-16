@@ -1,5 +1,7 @@
+import {AuthorizationComponent, AuthorizationDecision, AuthorizationOptions, AuthorizationTags} from '@loopback/authorization';
 import dotenv from 'dotenv';
 import {ApplicationConfig, JudgeApplication} from './application';
+import {MyAuthorizationProvider} from './providers';
 export * from './application';
 dotenv.config({path: './.env'})
 export async function main(options: ApplicationConfig = {}) {
@@ -8,6 +10,18 @@ export async function main(options: ApplicationConfig = {}) {
   await app.migrateSchema();
   await app.start();
   const url = app.restServer.url;
+  const _options: AuthorizationOptions = {
+    precedence: AuthorizationDecision.DENY,
+    defaultDecision: AuthorizationDecision.DENY,
+  };
+
+  const binding = app.component(AuthorizationComponent);
+  app.configure(binding.key).to(_options);
+
+  app
+    .bind('authorizationProviders.my-authorizer-provider')
+    .toProvider(MyAuthorizationProvider)
+    .tag(AuthorizationTags.AUTHORIZER);
   console.log(`Server is running at ${url}`);
   console.log(`Try ${url}/ping`);
 
