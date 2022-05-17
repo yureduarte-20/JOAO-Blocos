@@ -1,6 +1,5 @@
 
 import {AuthorizationContext, AuthorizationDecision, AuthorizationMetadata, Authorizer} from '@loopback/authorization';
-import {securityId} from '@loopback/authorization/node_modules/@loopback/security';
 import {Provider} from '@loopback/core';
 import {repository} from '@loopback/repository';
 import {UserRepository} from '../repositories';
@@ -23,7 +22,8 @@ export class MyAuthorizationProvider implements Provider<Authorizer> {
     metadata: AuthorizationMetadata,
   ) {
     const client = authorizationCtx.principals[0];
-    const clientRole = await this.userRepository.findOne({where: {id: client[securityId]}, fields: {role: true}})
+    const clientRole = await this.userRepository.findById(client.id)
+    console.log(clientRole, client)
     if (!clientRole) return AuthorizationDecision.DENY
     const allowedRoles = metadata.allowedRoles || [];
     return allowedRoles.includes(clientRole?.role)

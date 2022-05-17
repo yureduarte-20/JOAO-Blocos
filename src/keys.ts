@@ -25,3 +25,9 @@ export const enum Roles {
   COLLABORATOR = 'COLLABORATOR',
   CONSUMER = 'CONSUMER'
 }
+export const enum SubmissionStatus {
+  ACCEPTED = 'Accepted',
+  TIME_LIMIT_EXCEEDED = 'Time limit exceeded',
+  PRESENTATION_ERROR = 'Presentation Error',
+  RUNTIME_ERROR = 'Runtime Error'
+}
