@@ -1,6 +1,6 @@
 import {Getter, inject} from '@loopback/core';
 import {DefaultCrudRepository, HasManyRepositoryFactory, repository} from '@loopback/repository';
-import {JsonDataSource} from '../datasources';
+import {PostgreeDataSource} from '../datasources';
 import {Issue, IssueRelations, Submission} from '../models';
 import {SubmissionRepository} from './submission.repository';
 
@@ -11,7 +11,7 @@ export class IssueRepository extends DefaultCrudRepository<
 > {
   protected submissions: HasManyRepositoryFactory<Submission, typeof Submission.prototype.id>;
   constructor(
-    @inject('datasources.Json') dataSource: JsonDataSource,
+    @inject('datasources.postgreeDatasource') dataSource: PostgreeDataSource,
     @repository.getter('SubmissionRepository') submissionsRepostoryGetter: Getter<SubmissionRepository>
   ) {
     super(Issue, dataSource);

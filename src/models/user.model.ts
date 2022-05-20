@@ -2,26 +2,29 @@ import {Entity, hasMany, model, property} from '@loopback/repository';
 import {Submission} from './submission.model';
 @model({
   settings: {
+    hiddenProperties: ['password'],
     mysql: {
+      table: 'users'
+    },
+    postgresql: {
       table: 'users'
     }
   }
 })
 export class User extends Entity {
   @property({
-    type: 'string',
+    type: 'String',
     id: true,
-    generated: true,
-    mysql: {
-      dataType: 'INTEGER',
-    }
+    defaultFn: 'uuid',
+    postgresql: {
+      columnName: 'id',
+      dataType: 'uuid',
+    },
   })
   id?: string;
-
   @property({
     type: 'string',
     required: true,
-
   })
   name: string;
 
@@ -30,19 +33,27 @@ export class User extends Entity {
     required: true,
     format: 'email',
     jsonSchema: {
-      format: 'email'
+      format: 'email',
+    },
+    index: {
+      unique: true
     }
+
+
   })
   email: string;
 
   @property({
     type: 'string',
     required: true,
-    hidden: true,
     minLength: 8,
     jsonSchema: {
       minLength: 8,
-      hidden: true,
+    },
+    postgresql: {
+      columnName: 'password',
+      nullable: 'NO',
+      dataLength: 40
     }
   })
   password: string;
@@ -50,7 +61,11 @@ export class User extends Entity {
   @property({
     type: 'string',
     required: true,
-
+    postgresql: {
+      columnName: 'role',
+      nullable: 'NO',
+      dataLength: 40,
+    }
   })
   role: string;
   @hasMany(() => Submission, {name: 'submissions'})

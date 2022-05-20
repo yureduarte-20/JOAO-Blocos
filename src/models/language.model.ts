@@ -1,29 +1,43 @@
 import {Entity, hasMany, model, property} from '@loopback/repository';
 import {Submission} from './submission.model';
 
-@model()
+@model({
+  settings: {
+    allowExtendedOperators: true,
+  }
+})
 export class Language extends Entity {
+  @property({
+    type: 'String',
+    id: true,
+    defaultFn: 'uuid',
+    postgresql: {
+      columnName: 'id',
+      dataType: 'uuid',
+    },
+  })
+  id?: string;
   @property({
     type: 'string',
     required: true,
   })
   name: string;
 
-  @property({
-    type: 'string',
-    id: true,
-    generated: true,
-  })
-  id?: string;
 
   @property({
     type: 'string',
+    postgresql: {
+      columnName: 'language_version',
+    }
   })
-  version?: string;
+  languageVersion?: string;
 
   @property({
     type: 'string',
     required: true,
+    postgresql: {
+      columnName: 'docker_tag_version',
+    }
   })
   dockerTagVersion: string;
 

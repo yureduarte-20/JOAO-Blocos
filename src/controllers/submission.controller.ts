@@ -3,7 +3,7 @@
 import {authenticate, AuthenticationBindings} from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
 import {inject} from '@loopback/core';
-import {repository} from '@loopback/repository';
+import {Filter, repository} from '@loopback/repository';
 import {get, HttpErrors, param, post, requestBody, response} from '@loopback/rest';
 import {securityId, UserProfile} from '@loopback/security';
 import {JudgeServiceBindings, Roles, SubmissionStatus} from '../keys';
@@ -47,7 +47,7 @@ export class SubmissionController {
   ) { }
 
   @authorize({allowedRoles: [Roles.ADMIN, Roles.COLLABORATOR, Roles.CONSUMER]})
-  @post('/submission/{issueId}')
+  @post('/submission')
   @response(200, {
     description: 'execution of javascript code'
   })
@@ -65,17 +65,21 @@ export class SubmissionController {
               },
               blocksXml: {
                 type: 'string'
+              },
+              issueId: {
+                type: 'string',
               }
             }
           }
         }
       }
     })
-    body: {code: string, languageId: string, blocksXml?: string},
-    @param.path.string('issueId') issueId: string,
+    body: {code: string, languageId: string, blocksXml?: string, issueId: string},
+
+
   ): Promise<any> {
 
-    const issue = await this.issueRepository.findById(issueId);
+    const issue = await this.issueRepository.findById(body.issueId);
     try {
       const output = await this.judgeService.execute(body.languageId, body.code, issue.args)
       if (issue.expectedOutput === output) {
@@ -143,7 +147,9 @@ export class SubmissionController {
   @response(200, {
     description: 'users submissions'
   })
-  async getAll(): Promise<Submission[]> {
-    return this.submissionsRepository.find({where: {userId: this.user[securityId]}})
+  async getAll(
+    @param.filter(Submission) filter?: Filter<Submission>
+  ): Promise<Submission[]> {
+    return this.submissionsRepository.find({...filter, where: {...filter?.where, userId: this.user[securityId]}})
   }
 }

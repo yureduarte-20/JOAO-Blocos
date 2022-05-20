@@ -98,8 +98,8 @@ export class UserController {
       }
     }
   })
-  async profile() {
-    console.log(this.user)
+  async profile(
+  ) {
     return this.userRepository.findOne({where: {id: this.user[securityId]}})
   }
 }

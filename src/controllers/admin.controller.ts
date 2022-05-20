@@ -1,5 +1,6 @@
 import {authenticate} from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
+import {inject} from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -10,21 +11,24 @@ import {
 } from '@loopback/repository';
 import {
   del, get,
-  getModelSchemaRef, param, patch, post, put, requestBody,
+  getModelSchemaRef, HttpErrors, param, patch, post, put, requestBody,
   response
 } from '@loopback/rest';
-import {Roles} from '../keys';
+import {Roles, UserServiceBindings} from '../keys';
 import {User} from '../models';
 import {UserRepository} from '../repositories';
-@authenticate('jwt')
+import {MyUserService} from '../services/user.service';
+@authenticate("jwt")
 @authorize({allowedRoles: [Roles.ADMIN]})
 export class AdminController {
   constructor(
     @repository(UserRepository)
     public userRepository: UserRepository,
+    @inject(UserServiceBindings.USER_SERVICE)
+    public userService: MyUserService,
   ) { }
 
-  @post('/admin/users')
+  @post('/admin')
   @response(200, {
     description: 'User model instance',
     content: {'application/json': {schema: getModelSchemaRef(User)}},
@@ -40,12 +44,19 @@ export class AdminController {
         },
       },
     })
-    user: Omit<User, 'id'>,
+    newUser: Omit<User, 'id'>,
   ): Promise<User> {
-    return this.userRepository.create(user);
+    let finded = await this.userRepository.findOne({
+      where: {
+        email: newUser.email
+      }
+    })
+    if (finded) return Promise.reject(new HttpErrors.UnprocessableEntity("Usuário com email já cadastrado."))
+    let password_hashed = await this.userService.hasher.hashPassword(newUser.password);
+    return this.userRepository.create({...newUser, password: password_hashed})
   }
 
-  @get('/users/count')
+  @get('/admin/count')
   @response(200, {
     description: 'User model count',
     content: {'application/json': {schema: CountSchema}},
@@ -56,7 +67,7 @@ export class AdminController {
     return this.userRepository.count(where);
   }
 
-  @get('/admin/users')
+  @get('/admin')
   @response(200, {
     description: 'Array of User model instances',
     content: {
@@ -74,7 +85,7 @@ export class AdminController {
     return this.userRepository.find(filter);
   }
 
-  @patch('/admin/users')
+  @patch('/admin')
   @response(200, {
     description: 'User PATCH success count',
     content: {'application/json': {schema: CountSchema}},
@@ -93,7 +104,7 @@ export class AdminController {
     return this.userRepository.updateAll(user, where);
   }
 
-  @get('/users/{id}')
+  @get('/admin/{id}')
   @response(200, {
     description: 'User model instance',
     content: {
@@ -109,7 +120,7 @@ export class AdminController {
     return this.userRepository.findById(id, filter);
   }
 
-  @patch('/users/{id}')
+  @patch('/admin/{id}')
   @response(204, {
     description: 'User PATCH success',
   })
@@ -127,7 +138,7 @@ export class AdminController {
     await this.userRepository.updateById(id, user);
   }
 
-  @put('/users/{id}')
+  @put('/admin/{id}')
   @response(204, {
     description: 'User PUT success',
   })
@@ -138,7 +149,7 @@ export class AdminController {
     await this.userRepository.replaceById(id, user);
   }
 
-  @del('/users/{id}')
+  @del('/admin/{id}')
   @response(204, {
     description: 'User DELETE success',
   })
