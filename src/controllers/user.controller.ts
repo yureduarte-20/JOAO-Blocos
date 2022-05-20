@@ -6,6 +6,7 @@ import {inject} from '@loopback/core';
 import {repository} from '@loopback/repository';
 import {get, getModelSchemaRef, HttpErrors, post, requestBody, response} from '@loopback/rest';
 import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
+import {Roles} from '../keys';
 import {User} from '../models';
 import {UserRepository} from '../repositories/index';
 import {MyUserService} from '../services/user.service';
@@ -77,7 +78,7 @@ export class UserController {
         })
       },
     })
-    newUser: Omit<User, 'id'>
+    newUser: Omit<User, 'id' | 'role'>
   ) {
     let finded = await this.userRepository.findOne({
       where: {
@@ -86,7 +87,7 @@ export class UserController {
     })
     if (finded) return Promise.reject(new HttpErrors.UnprocessableEntity("Usuário com email já cadastrado."))
     let password_hashed = await this.userService.hasher.hashPassword(newUser.password);
-    return this.userRepository.create({...newUser, password: password_hashed})
+    return this.userRepository.create({...newUser, password: password_hashed, role: Roles.CONSUMER})
   }
   @authenticate("jwt")
   @get('/profile')
@@ -97,8 +98,8 @@ export class UserController {
       }
     }
   })
-  async profile() {
-    console.log(this.user)
+  async profile(
+  ) {
     return this.userRepository.findOne({where: {id: this.user[securityId]}})
   }
 }

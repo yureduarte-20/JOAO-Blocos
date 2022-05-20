@@ -19,3 +19,15 @@ export namespace PasswordHasherBindings {
 export namespace JudgeServiceBindings {
   export const JUDGE = BindingKey.create<JudgeService>('services.judge')
 }
+
+export const enum Roles {
+  ADMIN = 'ADMIN',
+  COLLABORATOR = 'COLLABORATOR',
+  CONSUMER = 'CONSUMER'
+}
+export const enum SubmissionStatus {
+  ACCEPTED = 'Accepted',
+  TIME_LIMIT_EXCEEDED = 'Time limit exceeded',
+  PRESENTATION_ERROR = 'Presentation Error',
+  RUNTIME_ERROR = 'Runtime Error'
+}

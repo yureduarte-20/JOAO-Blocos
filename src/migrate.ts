@@ -5,6 +5,7 @@ export async function migrate(args: string[]) {
   console.log('Migrating schemas (%s existing schema)', existingSchema);
 
   const app = new JudgeApplication();
+  console.log(app.dataSource)
   await app.boot();
   await app.migrateSchema({existingSchema});
 
