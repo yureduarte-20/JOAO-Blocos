@@ -8,7 +8,7 @@ import {get, HttpErrors, param, post, requestBody, response} from '@loopback/res
 import {securityId, UserProfile} from '@loopback/security';
 import {JudgeServiceBindings, Roles, SubmissionStatus} from '../keys';
 import {Submission} from '../models';
-import {IssueRepository, SubmissionRepository} from '../repositories';
+import {IssueRepository, LanguageRepository, SubmissionRepository} from '../repositories';
 import {JudgeService} from '../services/judge.service';
 
 class RuntimeHttpError extends HttpErrors.UnprocessableEntity {
@@ -44,6 +44,8 @@ export class SubmissionController {
     private issueRepository: IssueRepository,
     @repository('SubmissionRepository')
     private submissionsRepository: SubmissionRepository,
+    @repository('LanguageRepository')
+    private languageRepository: LanguageRepository
   ) { }
 
   @authorize({allowedRoles: [Roles.ADMIN, Roles.COLLABORATOR, Roles.CONSUMER]})
@@ -79,8 +81,18 @@ export class SubmissionController {
 
   ): Promise<any> {
 
-    const issue = await this.issueRepository.findById(body.issueId);
-    try {
+    const issue = await this.issueRepository.findById(body.issueId, {fields: {id: true}});
+    const language = await this.languageRepository.findById(body.languageId, {fields: {id: true}})
+    const submission = new Submission({
+      userId: this.user[securityId],
+      status: SubmissionStatus.PENDING,
+      issueId: issue.id,
+      code: body.code,
+      languageId: language.id,
+      blocksXml: body.blocksXml
+    })
+    return this.submissionsRepository.create(submission);
+    /* try {
       const output = await this.judgeService.execute(body.languageId, body.code, issue.args)
       if (issue.expectedOutput === output) {
         await this.submissionsRepository.create({
@@ -141,6 +153,7 @@ export class SubmissionController {
         }
       }))
     }
+    */
   }
   @authorize({allowedRoles: [Roles.ADMIN, Roles.COLLABORATOR, Roles.CONSUMER]})
   @get('/submissions')

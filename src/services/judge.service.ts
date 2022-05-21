@@ -1,12 +1,9 @@
-import {authenticate, AuthenticationBindings} from '@loopback/authentication';
-import {inject} from '@loopback/core';
 import {repository} from '@loopback/repository';
-import {securityId, UserProfile} from '@loopback/security';
-import {exec, execSync, spawn} from 'child_process';
-import {randomBytes} from 'crypto';
-import {unlink, writeFile} from 'fs';
-import {LanguageRepository} from '../repositories';
-@authenticate("jwt")
+import {execSync} from 'child_process';
+import {ScheduledTask} from 'node-cron';
+import {SubmissionStatus} from '../keys';
+import {Submission} from '../models';
+import {LanguageRepository, SubmissionRepository} from '../repositories';
 
 export class TimeOutError extends Error {
   constructor(msg: string) {
@@ -14,17 +11,34 @@ export class TimeOutError extends Error {
     this.name = "Timeout Error"
   }
 }
-export class JudgeService {
+export interface JudgeBootstraper {
+  boot(cron_interval_time?: number): void;
+  destroy(): void;
+}
+export class JudgeService implements JudgeBootstraper {
   private readonly path: string;
+  private task: ScheduledTask;
   constructor(
-    @inject(AuthenticationBindings.CURRENT_USER)
-    private user: UserProfile,
     @repository('LanguageRepository')
-    private languageRepository: LanguageRepository
+    private languageRepository: LanguageRepository,
+    @repository('SubmissionRepository')
+    private submissionsRepository: SubmissionRepository
   ) {
     this.path = execSync("pwd").toString().trim()
   }
-  async execute(languageId: string, code: string, args?: string[]) {
+  boot(cron_interval_time?: number): void {
+    (async () => {
+      console.log(await this.getAllPendingSubmissions())
+    })()
+
+  }
+  destroy(): void {
+    this.task.stop();
+  }
+  private getAllPendingSubmissions(): Promise<Submission[]> {
+    return this.submissionsRepository.find({where: {status: SubmissionStatus.PENDING}, include: ["language"]})
+  }
+  /* async execute(languageId: string, code: string, args?: string[]) {
     let saidas: any = [];
     let erros: any = [];
     const dockerTagVersion = (await this.languageRepository.findById(languageId)).dockerTagVersion
@@ -83,5 +97,6 @@ export class JudgeService {
       })
 
     })
-  }
+  } */
+
 }

@@ -1,6 +1,7 @@
 import {UserService} from '@loopback/authentication';
 import {BindingKey} from '@loopback/core';
 import {User} from './models';
+import {DockerService} from './services/docker.service';
 import {PasswordHasher} from './services/hash.password';
 import {JudgeService} from './services/judge.service';
 import {Credentials} from './types';
@@ -17,9 +18,11 @@ export namespace PasswordHasherBindings {
 }
 
 export namespace JudgeServiceBindings {
-  export const JUDGE = BindingKey.create<JudgeService>('services.judge')
+  export const JUDGE = BindingKey.create<JudgeService>('services.judge');
 }
-
+export namespace DockerServiceBindings {
+  export const DOCKER = BindingKey.create<DockerService>('services.docker');
+}
 export const enum Roles {
   ADMIN = 'ADMIN',
   COLLABORATOR = 'COLLABORATOR',
@@ -29,5 +32,6 @@ export const enum SubmissionStatus {
   ACCEPTED = 'Accepted',
   TIME_LIMIT_EXCEEDED = 'Time limit exceeded',
   PRESENTATION_ERROR = 'Presentation Error',
-  RUNTIME_ERROR = 'Runtime Error'
+  RUNTIME_ERROR = 'Runtime Error',
+  PENDING = 'Pending'
 }
