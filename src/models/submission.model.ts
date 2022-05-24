@@ -90,14 +90,17 @@ export class Submission extends Entity {
     type: 'string'
   })
   blocksXml?: string
-
+  @property({
+    type: 'string',
+  })
+  runtime_error?: string
   constructor(data?: Partial<Submission>) {
     super(data);
   }
 }
 
 export interface SubmissionRelations {
-  // describe navigational properties here
+
 }
 
 export type SubmissionWithRelations = Submission & SubmissionRelations;

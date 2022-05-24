@@ -23,7 +23,6 @@ export class MyAuthorizationProvider implements Provider<Authorizer> {
   ) {
     const client = authorizationCtx.principals[0];
     const clientRole = await this.userRepository.findById(client.id)
-    console.log(clientRole, client)
     if (!clientRole) return AuthorizationDecision.DENY
     const allowedRoles = metadata.allowedRoles || [];
     return allowedRoles.includes(clientRole?.role)

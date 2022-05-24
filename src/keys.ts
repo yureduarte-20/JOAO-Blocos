@@ -29,9 +29,10 @@ export const enum Roles {
   CONSUMER = 'CONSUMER'
 }
 export const enum SubmissionStatus {
-  ACCEPTED = 'Accepted',
-  TIME_LIMIT_EXCEEDED = 'Time limit exceeded',
-  PRESENTATION_ERROR = 'Presentation Error',
-  RUNTIME_ERROR = 'Runtime Error',
-  PENDING = 'Pending'
+  ACCEPTED = 'ACCEPTED',
+  TIME_LIMIT_EXCEEDED = 'TIME_LIMIT_EXCEEDED',
+  PRESENTATION_ERROR = 'PRESENTATION_ERROR',
+  PENDING = 'PENDING',
+  RUNTIME_ERROR = 'RUNTIME_ERROR',
+  COMPILATION_ERROR = 'COMPILATION_ERROR'
 }

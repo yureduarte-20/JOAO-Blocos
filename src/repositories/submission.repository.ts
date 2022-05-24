@@ -2,9 +2,9 @@ import {Getter, inject} from '@loopback/core';
 import {BelongsToAccessor, DefaultCrudRepository, repository} from '@loopback/repository';
 import {PostgreeDataSource} from '../datasources';
 import {Issue, Language, Submission, SubmissionRelations, User} from '../models';
+import {UserRepository} from './index';
 import {IssueRepository} from './issue.repository';
 import {LanguageRepository} from './language.repository';
-import {UserRepository} from './user.repository';
 
 export class SubmissionRepository extends DefaultCrudRepository<
   Submission,
@@ -17,7 +17,7 @@ export class SubmissionRepository extends DefaultCrudRepository<
   constructor(
     @inject('datasources.postgreeDatasource') dataSource: PostgreeDataSource,
     @repository.getter('IssueRepository') issueRepositoryGetter: Getter<IssueRepository>,
-    @repository.getter('userRepository') ownerRepositoryGetter: Getter<UserRepository>,
+    @repository.getter('UserRepository') ownerRepositoryGetter: Getter<UserRepository>,
     @repository.getter('LanguageRepository') languageRepositoryGetter: Getter<LanguageRepository>,
   ) {
     super(Submission, dataSource);

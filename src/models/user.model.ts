@@ -2,7 +2,6 @@ import {Entity, hasMany, model, property} from '@loopback/repository';
 import {Submission} from './submission.model';
 @model({
   settings: {
-    hiddenProperties: ['password'],
     mysql: {
       table: 'users'
     },
@@ -47,6 +46,7 @@ export class User extends Entity {
     type: 'string',
     required: true,
     minLength: 8,
+    hidden: true,
     jsonSchema: {
       minLength: 8,
     },
