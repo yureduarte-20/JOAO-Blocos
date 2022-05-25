@@ -112,7 +112,7 @@ export class AdminController {
     },
   })
   async findById(
-    @param.path.string('id') id: string,
+    @param.path.number('id') id: number,
     @param.filter(User, {exclude: 'where'}) filter?: FilterExcludingWhere<User>
   ): Promise<User> {
     return this.userRepository.findById(id, filter);
@@ -123,7 +123,7 @@ export class AdminController {
     description: 'User PATCH success',
   })
   async updateById(
-    @param.path.string('id') id: string,
+    @param.path.number('id') id: number,
     @requestBody({
       content: {
         'application/json': {
@@ -141,7 +141,7 @@ export class AdminController {
     description: 'User PUT success',
   })
   async replaceById(
-    @param.path.string('id') id: string,
+    @param.path.number('id') id: number,
     @requestBody() user: User,
   ): Promise<void> {
     await this.userRepository.replaceById(id, user);
@@ -151,7 +151,7 @@ export class AdminController {
   @response(204, {
     description: 'User DELETE success',
   })
-  async deleteById(@param.path.string('id') id: string): Promise<void> {
+  async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.userRepository.deleteById(id);
   }
 }

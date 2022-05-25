@@ -103,7 +103,7 @@ export class LanguageController {
     },
   })
   async findById(
-    @param.path.string('id') id: string,
+    @param.path.number('id') id: number,
     @param.filter(Language, {exclude: 'where'}) filter?: FilterExcludingWhere<Language>
   ): Promise<Language> {
     return this.languageRepository.findById(id, filter);
@@ -114,7 +114,7 @@ export class LanguageController {
     description: 'Language PATCH success',
   })
   async updateById(
-    @param.path.string('id') id: string,
+    @param.path.number('id') id: number,
     @requestBody({
       content: {
         'application/json': {
@@ -132,7 +132,7 @@ export class LanguageController {
     description: 'Language PUT success',
   })
   async replaceById(
-    @param.path.string('id') id: string,
+    @param.path.number('id') id: number,
     @requestBody() language: Language,
   ): Promise<void> {
     await this.languageRepository.replaceById(id, language);
@@ -142,7 +142,7 @@ export class LanguageController {
   @response(204, {
     description: 'Language DELETE success',
   })
-  async deleteById(@param.path.string('id') id: string): Promise<void> {
+  async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.languageRepository.deleteById(id);
   }
 }

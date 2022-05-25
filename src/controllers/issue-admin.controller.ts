@@ -103,7 +103,7 @@ export class IssueAdminController {
     },
   })
   async findById(
-    @param.path.string('id') id: string,
+    @param.path.number('id') id: number,
     @param.filter(Issue, {exclude: 'where'}) filter?: FilterExcludingWhere<Issue>
   ): Promise<Issue> {
     return this.issueRepository.findById(id, filter);
@@ -114,7 +114,7 @@ export class IssueAdminController {
     description: 'Issue PATCH success',
   })
   async updateById(
-    @param.path.string('id') id: string,
+    @param.path.number('id') id: number,
     @requestBody({
       content: {
         'application/json': {
@@ -132,7 +132,7 @@ export class IssueAdminController {
     description: 'Issue PUT success',
   })
   async replaceById(
-    @param.path.string('id') id: string,
+    @param.path.number('id') id: number,
     @requestBody() issue: Issue,
   ): Promise<void> {
     await this.issueRepository.replaceById(id, issue);
@@ -142,7 +142,7 @@ export class IssueAdminController {
   @response(204, {
     description: 'Issue DELETE success',
   })
-  async deleteById(@param.path.string('id') id: string): Promise<void> {
+  async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.issueRepository.deleteById(id);
   }
 }

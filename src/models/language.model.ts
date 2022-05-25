@@ -8,7 +8,7 @@ import {Submission} from './submission.model';
 })
 export class Language extends Entity {
   @property({
-    type: 'string',
+    type: 'number',
     id: true,
     generated: true,
     postgresql: {
@@ -16,7 +16,7 @@ export class Language extends Entity {
       dataType: 'INTEGER',
     },
   })
-  id?: string;
+  id?: number;
   @property({
     type: 'string',
     required: true,

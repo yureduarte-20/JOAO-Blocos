@@ -64,7 +64,7 @@ export class JudgeService implements JudgeBootstraper {
   private getAllPendingSubmissions(): Promise<Submission[]> {
     return this.submissionsRepository.find({where: {status: SubmissionStatus.PENDING}, limit: this.MAX_SIMULTANEOUS_EXECUTIONS})
   }
-  private async getLanguage(languageId: string): Promise<Language> {
+  private async getLanguage(languageId: typeof Language.prototype.id): Promise<Language> {
     this.languageCaches.forEach(element => {
       if (element.id === languageId) {
         return element;
@@ -76,7 +76,7 @@ export class JudgeService implements JudgeBootstraper {
     return newLanguage
 
   }
-  private async getIssue(issueId: string) {
+  private async getIssue(issueId: typeof Issue.prototype.id) {
     for (let element of this.issueCaches) {
       if (element.id === issueId) {
         return element;

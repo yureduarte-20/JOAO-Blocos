@@ -12,7 +12,7 @@ import {Submission} from './submission.model';
 })
 export class User extends Entity {
   @property({
-    type: 'string',
+    type: 'number',
     id: true,
     generated: true,
     postgresql: {
@@ -20,7 +20,7 @@ export class User extends Entity {
       dataType: 'INTEGER',
     },
   })
-  id?: string;
+  id?: number;
   @property({
     type: 'string',
     required: true,

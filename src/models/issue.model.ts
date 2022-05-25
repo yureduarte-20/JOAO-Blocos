@@ -16,7 +16,7 @@ export class Issue extends Entity {
       dataType: 'INTEGER',
     },
   })
-  id?: string;
+  id?: number;
 
   @property({
     type: 'string',

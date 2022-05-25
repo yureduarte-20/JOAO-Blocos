@@ -38,20 +38,20 @@ export class SubmissionController {
                 type: 'string'
               },
               languageId: {
-                type: 'string'
+                type: 'number'
               },
               blocksXml: {
                 type: 'string'
               },
               issueId: {
-                type: 'string',
+                type: 'number',
               }
             }
           }
         }
       }
     })
-    body: {code: string, languageId: string, blocksXml?: string, issueId: string},
+    body: {code: string, languageId: number, blocksXml?: string, issueId: number},
 
 
   ): Promise<any> {
@@ -59,11 +59,11 @@ export class SubmissionController {
     const issue = await this.issueRepository.findById(body.issueId, {fields: {id: true}});
     const language = await this.languageRepository.findById(body.languageId, {fields: {id: true}})
     return this.submissionsRepository.create({
-      userId: this.user[securityId],
+      userId: parseInt(this.user[securityId]),
       status: SubmissionStatus.PENDING,
-      issueId: issue.id?.toString(),
+      issueId: issue.id,
       code: body.code,
-      languageId: language.id?.toString(),
+      languageId: language.id,
       blocksXml: body.blocksXml
     });
   }
@@ -75,6 +75,6 @@ export class SubmissionController {
   async getAll(
     @param.filter(Submission) filter?: Filter<Submission>
   ): Promise<Submission[]> {
-    return this.submissionsRepository.find({...filter, where: {...filter?.where, userId: this.user[securityId]}})
+    return this.submissionsRepository.find({...filter, where: {...filter?.where, userId: parseInt(this.user[securityId])}})
   }
 }
