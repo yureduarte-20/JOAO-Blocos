@@ -5,7 +5,6 @@ import {User} from './user.model';
 
 @model({
   settings: {
-    strict: true,
     allowExtendedOperators: true,
     foreignKeys: {
       fk_submission_userId: {
@@ -37,18 +36,19 @@ import {User} from './user.model';
 })
 export class Submission extends Entity {
   @property({
-    type: 'String',
+    type: 'string',
     id: true,
-    defaultFn: 'uuid',
+    generated: true,
     postgresql: {
       columnName: 'id',
-      dataType: 'uuid',
+      dataType: 'INTEGER',
     },
   })
   id?: string;
   @belongsTo(() => User, {name: 'owner'}, {
+    type: 'string',
     postgresql: {
-      dataType: 'uuid',
+      dataType: 'INTEGER',
       nullable: 'NO',
     },
     required: true
@@ -57,7 +57,7 @@ export class Submission extends Entity {
 
   @belongsTo(() => Issue, {name: 'issue'}, {
     postgresql: {
-      dataType: 'uuid',
+      dataType: 'INTEGER',
       nullable: 'NO',
     },
     required: true
@@ -78,9 +78,9 @@ export class Submission extends Entity {
   status: string;
 
   @belongsTo(() => Language, {name: 'language'}, {
-    type: 'String',
+    type: 'string',
     postgresql: {
-      dataType: 'uuid',
+      dataType: 'INTEGER',
       nullable: 'NO',
     },
     required: true
@@ -93,7 +93,7 @@ export class Submission extends Entity {
   @property({
     type: 'string',
   })
-  runtime_error?: string
+  error?: string
   constructor(data?: Partial<Submission>) {
     super(data);
   }

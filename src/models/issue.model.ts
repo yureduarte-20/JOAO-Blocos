@@ -8,13 +8,12 @@ import {Submission} from './submission.model';
 })
 export class Issue extends Entity {
   @property({
-    type: 'String',
+    type: 'number',
     id: true,
-    defaultFn: 'uuid',
+    generated: true,
     postgresql: {
       columnName: 'id',
-      dataType: 'uuid',
-
+      dataType: 'INTEGER',
     },
   })
   id?: string;
@@ -41,13 +40,6 @@ export class Issue extends Entity {
     required: true,
   })
   expectedOutput: string;
-  /* @property({
-    type: ['string'],
-    columnName: 'args',
-    postgresql: {
-      dataType: 'varchar[]',
-    },
-  }) */
   @property.array(String)
   args?: string[];
 

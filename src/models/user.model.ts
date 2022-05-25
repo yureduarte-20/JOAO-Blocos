@@ -12,12 +12,12 @@ import {Submission} from './submission.model';
 })
 export class User extends Entity {
   @property({
-    type: 'String',
+    type: 'string',
     id: true,
-    defaultFn: 'uuid',
+    generated: true,
     postgresql: {
       columnName: 'id',
-      dataType: 'uuid',
+      dataType: 'INTEGER',
     },
   })
   id?: string;
