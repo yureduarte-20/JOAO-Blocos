@@ -17,13 +17,13 @@ import {Roles} from '../keys';
 import {Issue} from '../models';
 import {IssueRepository} from '../repositories';
 @authenticate('jwt')
-@authorize({allowedRoles: [Roles.ADMIN]})
+
 export class IssueAdminController {
   constructor(
     @repository(IssueRepository)
     public issueRepository: IssueRepository,
   ) { }
-
+  @authorize({allowedRoles: [Roles.ADMIN]})
   @post('/admin-issues')
   @response(200, {
     description: 'Issue model instance',
@@ -44,8 +44,8 @@ export class IssueAdminController {
   ): Promise<Issue> {
     return this.issueRepository.create(issue);
   }
-
-  @get('/admin-issues/count')
+  @authorize({allowedRoles: [Roles.ADMIN, Roles.COLLABORATOR, Roles.CONSUMER]})
+  @get('/issues/count')
   @response(200, {
     description: 'Issue model count',
     content: {'application/json': {schema: CountSchema}},
@@ -55,8 +55,8 @@ export class IssueAdminController {
   ): Promise<Count> {
     return this.issueRepository.count(where);
   }
-
-  @get('/admin-issues')
+  @authorize({allowedRoles: [Roles.ADMIN, Roles.COLLABORATOR, Roles.CONSUMER]})
+  @get('/issues')
   @response(200, {
     description: 'Array of Issue model instances',
     content: {
@@ -73,7 +73,7 @@ export class IssueAdminController {
   ): Promise<Issue[]> {
     return this.issueRepository.find(filter);
   }
-
+  @authorize({allowedRoles: [Roles.ADMIN]})
   @patch('/admin-issues')
   @response(200, {
     description: 'Issue PATCH success count',
@@ -92,7 +92,7 @@ export class IssueAdminController {
   ): Promise<Count> {
     return this.issueRepository.updateAll(issue, where);
   }
-
+  @authorize({allowedRoles: [Roles.ADMIN, Roles.COLLABORATOR, Roles.CONSUMER]})
   @get('/admin-issues/{id}')
   @response(200, {
     description: 'Issue model instance',
@@ -108,7 +108,7 @@ export class IssueAdminController {
   ): Promise<Issue> {
     return this.issueRepository.findById(id, filter);
   }
-
+  @authorize({allowedRoles: [Roles.ADMIN]})
   @patch('/admin-issues/{id}')
   @response(204, {
     description: 'Issue PATCH success',
@@ -126,7 +126,7 @@ export class IssueAdminController {
   ): Promise<void> {
     await this.issueRepository.updateById(id, issue);
   }
-
+  @authorize({allowedRoles: [Roles.ADMIN]})
   @put('/admin-issues/{id}')
   @response(204, {
     description: 'Issue PUT success',
@@ -137,7 +137,7 @@ export class IssueAdminController {
   ): Promise<void> {
     await this.issueRepository.replaceById(id, issue);
   }
-
+  @authorize({allowedRoles: [Roles.ADMIN]})
   @del('/admin-issues/{id}')
   @response(204, {
     description: 'Issue DELETE success',

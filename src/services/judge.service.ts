@@ -1,25 +1,27 @@
 import {inject} from '@loopback/core';
 import {repository} from '@loopback/repository';
+import Blockly from 'blockly';
 import {execSync} from 'child_process';
 import {unlink, writeFileSync} from 'fs';
 import cron, {ScheduledTask} from 'node-cron';
-import {DockerServiceBindings, SubmissionStatus} from '../keys';
+import {DockerServiceBindings, NodeJSBindings, SubmissionStatus} from '../keys';
 import {Issue, Language, Submission} from '../models';
 import {IssueRepository, LanguageRepository, SubmissionRepository} from '../repositories';
 import {DockerService} from './docker.service';
-
+import NodeJSService from './nodejs.service';
 export class TimeOutError extends Error {
   constructor(msg: string) {
     super(msg);
     this.name = "Timeout Error"
   }
 }
+
 export interface JudgeBootstraper {
   boot(cron_interval_time?: number): void;
   destroy(): void;
 }
 export class JudgeService implements JudgeBootstraper {
-  private readonly path: string;
+  private readonly absolutePath: string;
   private task: ScheduledTask;
   private languageCaches: Language[] = [];
   private issueCaches: Issue[] = [];
@@ -44,8 +46,10 @@ export class JudgeService implements JudgeBootstraper {
     private dockerService: DockerService,
     @repository('IssueRepository')
     private issueRepository: IssueRepository,
+    @inject(NodeJSBindings.NODE_JS_SERVICE)
+    private nodeJSService: NodeJSService
   ) {
-    this.path = execSync("pwd").toString().trim()
+    this.absolutePath = execSync("pwd").toString().trim()
   }
   boot(): void {
     this.task = cron.getTasks()[0] ?? cron.schedule('*/10 * * * * *', () => {
@@ -76,6 +80,13 @@ export class JudgeService implements JudgeBootstraper {
     return newLanguage
 
   }
+
+  private xmlToCode(xmlText: string) {
+    let xml = Blockly.Xml.textToDom(xmlText)
+    var workspace = new Blockly.Workspace();
+    Blockly.Xml.domToWorkspace(xml, workspace);
+    return Blockly.JavaScript.workspaceToCode(workspace);
+  }
   private async getIssue(issueId: typeof Issue.prototype.id) {
     for (let element of this.issueCaches) {
       if (element.id === issueId) {
@@ -103,30 +114,34 @@ export class JudgeService implements JudgeBootstraper {
   }
   private createTmpScript(basePath: string, fileName: string, data: string) {
     writeFileSync(`${basePath}/${fileName}`, data)
-
   }
+
+
   private deleteTmpScript(basePath: string, fileName: string) {
     unlink(`${basePath}/${fileName}`, (err) => {
       if (err) console.log(`Falhou em deletar ${fileName}`)
     })
   }
+
+
   private changeSubmission(submission: Submission): Promise<void> {
     return this.submissionsRepository.update(submission)
   }
+
+
   private handleOutput(output: string, issue: Issue) {
     return output === issue.expectedOutput;
   }
+
+
   async handleSubmission(submission: Submission) {
     let issue = await this.getIssue(submission.issueId)
-    let language = await this.getLanguage(submission.languageId)
-    const basePath = this.path + '/src/tmp/javascriptsCode';
-    const fileName = `${submission.userId}.js`;
-    const container_name = `${submission.id}-${language.name}`;
-    const code = this.prefixJavascript(issue.args).concat(submission.code);
-    const dockerImage = language.dockerTagVersion
+    const basePath = this.absolutePath + '/src/tmp/javascriptsCode';
+    const fileName = `${submission.id}.js`;
+    const code = this.prefixJavascript(issue.args).concat(this.xmlToCode(submission.blocksXml));
     this.createTmpScript(basePath, fileName, code)
     try {
-      const output = await this.dockerService.executeContainer(dockerImage, basePath, fileName, container_name)
+      const output = await this.nodeJSService.execute({fileName, basePath})
       this.handleOutput(output, issue) ?
         submission.status = SubmissionStatus.ACCEPTED :
         submission.status = SubmissionStatus.PRESENTATION_ERROR

@@ -4,6 +4,7 @@ import {User} from './models';
 import {DockerService} from './services/docker.service';
 import {PasswordHasher} from './services/hash.password';
 import {JudgeService} from './services/judge.service';
+import NodeJSService from './services/nodejs.service';
 import {Credentials} from './types';
 export namespace UserServiceBindings {
   export const USER_SERVICE = BindingKey.create<UserService<Credentials, User>>(
@@ -22,6 +23,9 @@ export namespace JudgeServiceBindings {
 }
 export namespace DockerServiceBindings {
   export const DOCKER = BindingKey.create<DockerService>('services.docker');
+}
+export namespace NodeJSBindings {
+  export const NODE_JS_SERVICE = BindingKey.create<NodeJSService>('services.nodejs')
 }
 export const enum Roles {
   ADMIN = 'ADMIN',

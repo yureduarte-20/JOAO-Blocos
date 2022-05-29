@@ -24,14 +24,6 @@ import {User} from './user.model';
         onDelete: 'CASCADE',
         onUpdate: 'SET NULL'
       },
-      fk_submission_languageId: {
-        name: 'fk_submission_languageId',
-        entity: 'Language',
-        entityKey: 'id',
-        foreignKey: 'languageid',
-        onDelete: 'CASCADE',
-        onUpdate: 'SET NULL'
-      },
     }
   }
 })
@@ -69,9 +61,8 @@ export class Submission extends Entity {
 
   @property({
     type: 'string',
-    required: true,
   })
-  code: string;
+  code?: string;
 
   @property({
     type: 'string',
@@ -83,15 +74,14 @@ export class Submission extends Entity {
     type: 'number',
     postgresql: {
       dataType: 'INTEGER',
-      nullable: 'NO',
     },
+  })
+  languageId?: number;
+  @property({
+    type: 'string',
     required: true
   })
-  languageId: number;
-  @property({
-    type: 'string'
-  })
-  blocksXml?: string
+  blocksXml: string
   @property({
     type: 'string',
   })

@@ -51,19 +51,20 @@ export class SubmissionController {
         }
       }
     })
-    body: {code: string, languageId: number, blocksXml?: string, issueId: number},
+    body: {code: string, languageId?: number, blocksXml?: string, issueId: number},
 
 
   ): Promise<any> {
 
     const issue = await this.issueRepository.findById(body.issueId, {fields: {id: true}});
-    const language = await this.languageRepository.findById(body.languageId, {fields: {id: true}})
+    if (body.languageId)
+      await this.languageRepository.findById(body.languageId, {fields: {id: true}})
     return this.submissionsRepository.create({
       userId: parseInt(this.user[securityId]),
       status: SubmissionStatus.PENDING,
       issueId: issue.id,
       code: body.code,
-      languageId: language.id,
+      languageId: body.languageId,
       blocksXml: body.blocksXml
     });
   }
