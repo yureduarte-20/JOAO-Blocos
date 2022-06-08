@@ -93,7 +93,7 @@ export class IssueAdminController {
     return this.issueRepository.updateAll(issue, where);
   }
   @authorize({allowedRoles: [Roles.ADMIN, Roles.COLLABORATOR, Roles.CONSUMER]})
-  @get('/admin-issues/{id}')
+  @get('/issues/{id}')
   @response(200, {
     description: 'Issue model instance',
     content: {

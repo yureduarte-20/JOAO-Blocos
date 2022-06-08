@@ -7,6 +7,7 @@ import cron, {ScheduledTask} from 'node-cron';
 import {DockerServiceBindings, NodeJSBindings, SubmissionStatus} from '../keys';
 import {Issue, Language, Submission} from '../models';
 import {IssueRepository, LanguageRepository, SubmissionRepository} from '../repositories';
+import {javascriptPrefix} from '../utils/javascriptScript';
 import {DockerService} from './docker.service';
 import NodeJSService from './nodejs.service';
 export class TimeOutError extends Error {
@@ -27,16 +28,6 @@ export class JudgeService implements JudgeBootstraper {
   private issueCaches: Issue[] = [];
   private MAX_SIMULTANEOUS_EXECUTIONS = 5;
   public avaliable: boolean = true;
-  private prefixJavascript = (args?: string[]) => `
-  let _args_variables = '${args?.join(',')}';
-  _args_variables = _args_variables.split(',').map(item => isNaN(Number(item)) ? (item[0] === ":" ? item.slice(1) : item  ) : Number(item))
-  let __argsIndex = 0;
-  const window = {
-    alert:(...msg ) => console.log(...msg),
-    prompt:(...args) => _args_variables[__argsIndex++]
-  };
-
-  `;
   constructor(
     @repository('LanguageRepository')
     private languageRepository: LanguageRepository,
@@ -130,7 +121,14 @@ export class JudgeService implements JudgeBootstraper {
 
 
   private handleOutput(output: string, issue: Issue) {
-    return output === issue.expectedOutput;
+    try {
+      let response = JSON.parse(output);
+      console.log(response)
+      return response.output_as_string == issue.expectedOutput
+    } catch (e) {
+
+      return output === issue.expectedOutput;
+    }
   }
 
 
@@ -138,14 +136,15 @@ export class JudgeService implements JudgeBootstraper {
     let issue = await this.getIssue(submission.issueId)
     const basePath = this.absolutePath + '/src/tmp/javascriptsCode';
     const fileName = `${submission.id}.js`;
-    const code = this.prefixJavascript(issue.args).concat(this.xmlToCode(submission.blocksXml));
+    const code = javascriptPrefix.concat(this.xmlToCode(submission.blocksXml));
     this.createTmpScript(basePath, fileName, code)
     try {
-      const output = await this.nodeJSService.execute({fileName, basePath})
+      const output = await this.nodeJSService.execute({fileName, basePath}, issue.args)
       this.handleOutput(output, issue) ?
         submission.status = SubmissionStatus.ACCEPTED :
         submission.status = SubmissionStatus.PRESENTATION_ERROR
     } catch (err) {
+      console.log(err.name)
       err instanceof TimeOutError ?
         submission.status = SubmissionStatus.TIME_LIMIT_EXCEEDED :
         submission.status = SubmissionStatus.RUNTIME_ERROR
