@@ -83,4 +83,5 @@ export class SubmissionController {
   ): Promise<Submission[]> {
     return this.submissionsRepository.find({...filter, where: {...filter?.where, userId: parseInt(this.user[securityId])}})
   }
+  
 }

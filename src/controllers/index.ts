@@ -4,3 +4,4 @@ export * from './ping.controller';
 export * from './submission.controller';
 export * from './user.controller';
 
+export * from './issue.controller';

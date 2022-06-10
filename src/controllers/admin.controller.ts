@@ -1,3 +1,5 @@
+import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 import {inject} from '@loopback/core';
 import {
   Count,
@@ -12,12 +14,12 @@ import {
   getModelSchemaRef, HttpErrors, param, patch, post, put, requestBody,
   response
 } from '@loopback/rest';
-import {UserServiceBindings} from '../keys';
+import {Roles, UserServiceBindings} from '../keys';
 import {User} from '../models';
 import {UserRepository} from '../repositories';
 import {MyUserService} from '../services/user.service';
-/* @authenticate("jwt")
-@authorize({allowedRoles: [Roles.ADMIN]}) */
+@authenticate("jwt")
+@authorize({allowedRoles: [Roles.ADMIN]})
 export class AdminController {
   constructor(
     @repository(UserRepository)
