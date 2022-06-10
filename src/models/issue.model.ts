@@ -38,9 +38,12 @@ export class Issue extends Entity {
   @property({
     type: 'string',
     required: true,
+    hidden: true
   })
   expectedOutput: string;
-  @property.array(String)
+  @property.array(String, {
+    hidden: true
+  })
   args?: string[];
 
   @property({
@@ -56,6 +59,15 @@ export class Issue extends Entity {
 
   @hasMany(() => Submission, {name: 'submissions'})
   submissions?: Submission[]
+
+  @property.array(String, {
+    require: true
+  })
+  demonstrationInputs: string[];
+
+  @property.array(String)
+  demonstrationOutputs?: string[];
+
   constructor(data?: Partial<Issue>) {
     super(data);
   }

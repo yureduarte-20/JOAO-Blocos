@@ -1,5 +1,6 @@
-import {authenticate} from '@loopback/authentication';
+import {authenticate, AuthenticationBindings} from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
+import {inject} from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -13,15 +14,24 @@ import {
   getModelSchemaRef, param, patch, post, put, requestBody,
   response
 } from '@loopback/rest';
+import {securityId, UserProfile} from '@loopback/security';
 import {Roles} from '../keys';
-import {Issue} from '../models';
-import {IssueRepository} from '../repositories';
+import {Issue, IssueRelations} from '../models';
+import {IssueRepository, SubmissionRepository} from '../repositories';
+interface Solved {
+  solved: boolean
+}
+type IssueSolved = Issue & IssueRelations & Solved;
 @authenticate('jwt')
 
 export class IssueAdminController {
   constructor(
     @repository(IssueRepository)
     public issueRepository: IssueRepository,
+    @inject(AuthenticationBindings.CURRENT_USER)
+    private user: UserProfile,
+    @repository('SubmissionRepository')
+    private submissionRepository: SubmissionRepository
   ) { }
   @authorize({allowedRoles: [Roles.ADMIN]})
   @post('/admin-issues')
@@ -70,8 +80,23 @@ export class IssueAdminController {
   })
   async find(
     @param.filter(Issue) filter?: Filter<Issue>,
-  ): Promise<Issue[]> {
-    return this.issueRepository.find(filter);
+    @param.query.boolean('withSubmissions') withSubmissions?: boolean
+  ): Promise<Issue[] | IssueSolved[]> {
+
+    if (!withSubmissions) {
+      return this.issueRepository.find({...filter, include: undefined})
+    }
+    const issues = await this.issueRepository.find({
+      ...filter,
+      include: [{
+        relation: 'submissions',
+        scope: {
+          where: {and: [{userId: this.user[securityId]}]}
+        }
+      }]
+    })
+
+    return issues;
   }
   @authorize({allowedRoles: [Roles.ADMIN]})
   @patch('/admin-issues')

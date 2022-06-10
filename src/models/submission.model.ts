@@ -40,6 +40,7 @@ export class Submission extends Entity {
   id?: number;
   @belongsTo(() => User, {name: 'owner'}, {
     type: 'number',
+    hidden: true,
     postgresql: {
       dataType: 'INTEGER',
       nullable: 'NO',
@@ -86,6 +87,14 @@ export class Submission extends Entity {
     type: 'string',
   })
   error?: string
+  @property({
+    type: 'date',
+    defaultFn: 'now',
+    postgresql: {
+      columnName: 'created_at',
+    }
+  })
+  createdAt: Date;
   constructor(data?: Partial<Submission>) {
     super(data);
   }

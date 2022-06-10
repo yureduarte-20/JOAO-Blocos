@@ -4,7 +4,7 @@ import {authenticate, AuthenticationBindings} from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
 import {inject} from '@loopback/core';
 import {Filter, repository} from '@loopback/repository';
-import {get, param, post, requestBody, response} from '@loopback/rest';
+import {get, getModelSchemaRef, param, post, requestBody, response} from '@loopback/rest';
 import {securityId, UserProfile} from '@loopback/security';
 import {Roles, SubmissionStatus} from '../keys';
 import {Submission} from '../models';
@@ -71,7 +71,12 @@ export class SubmissionController {
   @authorize({allowedRoles: [Roles.ADMIN, Roles.COLLABORATOR, Roles.CONSUMER]})
   @get('/submissions')
   @response(200, {
-    description: 'users submissions'
+    description: 'users submissions',
+    content: {
+      'application/json': {
+        schema: getModelSchemaRef(Submission)
+      }
+    }
   })
   async getAll(
     @param.filter(Submission) filter?: Filter<Submission>
