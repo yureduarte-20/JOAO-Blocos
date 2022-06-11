@@ -167,7 +167,7 @@ export class AdminController {
     // @todo set headers for content type, length and caching
     return await new Promise<void>((resolve, reject) => {
 
-      this.response.download(filepath, (err) => {
+      this.response.download(filepath, (err: any) => {
         if (err) return reject();
         return resolve();
       })

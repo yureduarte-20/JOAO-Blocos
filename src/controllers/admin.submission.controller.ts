@@ -146,19 +146,4 @@ export class SubmissionAdminController {
     await this.submissionRepository.deleteById(id);
   }
 
-  @get('/admin/files/download/db')
-  async download(): Promise<any> {
-    const absPath = execFileSync('pwd').toString().trimEnd();
-    const filepath = absPath + '/src/datasources/db.json';
-    // @todo set headers for content type, length and caching
-    return await new Promise<void>((resolve, reject) => {
-
-      this.response.download(filepath, (err) => {
-        if (err) return reject();
-        return resolve();
-      })
-    })
-
-
-  }
 }
