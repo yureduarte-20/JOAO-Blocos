@@ -5,3 +5,4 @@ export * from './submission.controller';
 export * from './user.controller';
 
 export * from './issue.controller';
+export * from './submission-admin.controller';

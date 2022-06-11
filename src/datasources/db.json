@@ -7,7 +7,7 @@
   },
   "models": {
     "User": {
-      "1": "{\"name\":\"yure\",\"email\":\"yure@gmail.com\",\"password\":\"$2a$10$bHxCy4aDBg3Wh.GlU6/kbu.jgvoYydGJgJAA.fLJdVEvxAUnFOdPK\",\"role\":\"ADMIN\",\"id\":\"1\"}"
+      "1": "{\"name\":\"yure\",\"email\":\"yure@gmail.com\",\"password\":\"$2a$10$1kMlo4jZPVHy70KoCtPFuu0At0.Gi6ibgtjx4XHHVF1mqE5RAxpai\",\"role\":\"ADMIN\",\"id\":\"1\"}"
     },
     "Issue": {},
     "Language": {
