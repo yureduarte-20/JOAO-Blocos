@@ -1,6 +1,6 @@
 import {Getter, inject} from '@loopback/core';
 import {BelongsToAccessor, DefaultCrudRepository, repository} from '@loopback/repository';
-import {JsonDataSource} from '../datasources';
+import {MongoDataSource} from '../datasources';
 import {Issue, Language, Submission, SubmissionRelations, User} from '../models';
 import {UserRepository} from './index';
 import {IssueRepository} from './issue.repository';
@@ -15,7 +15,7 @@ export class SubmissionRepository extends DefaultCrudRepository<
   protected readonly owner: BelongsToAccessor<User, typeof User.prototype.id>
   protected readonly language: BelongsToAccessor<Language, typeof Language.prototype.id>
   constructor(
-    @inject('datasources.Json') dataSource: JsonDataSource,
+    @inject('datasources.Mongo') dataSource: MongoDataSource,
     @repository.getter('IssueRepository') issueRepositoryGetter: Getter<IssueRepository>,
     @repository.getter('UserRepository') ownerRepositoryGetter: Getter<UserRepository>,
     @repository.getter('LanguageRepository') languageRepositoryGetter: Getter<LanguageRepository>,

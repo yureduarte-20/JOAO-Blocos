@@ -3,12 +3,12 @@ import {Submission} from './submission.model';
 
 @model({
   settings: {
-    allowExtendedOperators: true,
+    //allowExtendedOperators: true,
   }
 })
 export class Language extends Entity {
   @property({
-    type: 'number',
+    type: 'string',
     id: true,
     generated: true,
     postgresql: {
@@ -16,7 +16,7 @@ export class Language extends Entity {
       dataType: 'INTEGER',
     },
   })
-  id?: number;
+  id?: string;
   @property({
     type: 'string',
     required: true,

@@ -51,7 +51,7 @@ export class SubmissionController {
         }
       }
     })
-    body: {code: string, languageId?: number, blocksXml?: string, issueId: number},
+    body: {code: string, languageId?: string, blocksXml?: string, issueId: string},
 
 
   ): Promise<any> {
@@ -60,11 +60,11 @@ export class SubmissionController {
     if (body.languageId)
       await this.languageRepository.findById(body.languageId, {fields: {id: true}})
     return this.submissionsRepository.create({
-      userId: parseInt(this.user[securityId]),
+      userId: this.user[securityId] as any,
       status: SubmissionStatus.PENDING,
-      issueId: issue.id,
+      issueId: issue.id as any,
       code: body.code,
-      languageId: body.languageId,
+      languageId: body.languageId as any,
       blocksXml: body.blocksXml
     });
   }
@@ -81,7 +81,7 @@ export class SubmissionController {
   async getAll(
     @param.filter(Submission) filter?: Filter<Submission>
   ): Promise<Submission[]> {
-    return this.submissionsRepository.find({...filter, where: {...filter?.where, userId: parseInt(this.user[securityId])}})
+    return this.submissionsRepository.find({...filter, where: {...filter?.where, userId: this.user[securityId] as any}})
   }
-  
+
 }

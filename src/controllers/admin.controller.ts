@@ -1,5 +1,5 @@
-import {authenticate} from '@loopback/authentication';
-import {authorize} from '@loopback/authorization';
+//import {authenticate} from '@loopback/authentication';
+//import {authorize} from '@loopback/authorization';
 import {inject} from '@loopback/core';
 import {
   Count,
@@ -17,12 +17,12 @@ import {
   RestBindings
 } from '@loopback/rest';
 import {execFileSync} from 'child_process';
-import {Roles, UserServiceBindings} from '../keys';
+import {UserServiceBindings} from '../keys';
 import {User} from '../models';
 import {UserRepository} from '../repositories';
 import {MyUserService} from '../services/user.service';
-@authenticate("jwt")
-@authorize({allowedRoles: [Roles.ADMIN]})
+//@authenticate("jwt")
+//@authorize({allowedRoles: [Roles.ADMIN]})
 export class AdminController {
   constructor(
     @inject(RestBindings.Http.RESPONSE) private response: Response,
@@ -118,7 +118,7 @@ export class AdminController {
     },
   })
   async findById(
-    @param.path.number('id') id: number,
+    @param.path.string('id') id: string,
     @param.filter(User, {exclude: 'where'}) filter?: FilterExcludingWhere<User>
   ): Promise<User> {
     return this.userRepository.findById(id, filter);
@@ -129,7 +129,7 @@ export class AdminController {
     description: 'User PATCH success',
   })
   async updateById(
-    @param.path.number('id') id: number,
+    @param.path.string('id') id: string,
     @requestBody({
       content: {
         'application/json': {
@@ -147,7 +147,7 @@ export class AdminController {
     description: 'User PUT success',
   })
   async replaceById(
-    @param.path.number('id') id: number,
+    @param.path.string('id') id: string,
     @requestBody() user: User,
   ): Promise<void> {
     await this.userRepository.replaceById(id, user);
@@ -157,7 +157,7 @@ export class AdminController {
   @response(204, {
     description: 'User DELETE success',
   })
-  async deleteById(@param.path.number('id') id: number): Promise<void> {
+  async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.userRepository.deleteById(id);
   }
   @get('/admin/files/download/db')

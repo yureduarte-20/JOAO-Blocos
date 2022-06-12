@@ -83,7 +83,7 @@ export class IssueController {
     },
   })
   async findById(
-    @param.path.number('id') id: number,
+    @param.path.string('id') id: string,
     @param.filter(Issue, {exclude: 'where'}) filter?: FilterExcludingWhere<Issue>
   ): Promise<Issue> {
     return this.issueRepository.findById(id, filter);

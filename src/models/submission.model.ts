@@ -6,30 +6,30 @@ import {User} from './user.model';
 
 @model({
   settings: {
-    allowExtendedOperators: true,
-    foreignKeys: {
-      fk_submission_userId: {
-        name: 'fk_submission_userId',
-        entity: 'User',
-        entityKey: 'id',
-        foreignKey: 'userid',
-        onDelete: 'CASCADE',
-        onUpdate: 'SET NULL'
-      },
-      fk_submission_issueId: {
-        name: 'fk_submission_issueId',
-        entity: 'Issue',
-        entityKey: 'id',
-        foreignKey: 'issueid',
-        onDelete: 'CASCADE',
-        onUpdate: 'SET NULL'
-      },
-    }
+    //allowExtendedOperators: true,
+    /*     foreignKeys: {
+          fk_submission_userId: {
+            name: 'fk_submission_userId',
+            entity: 'User',
+            entityKey: 'id',
+            foreignKey: 'userid',
+            onDelete: 'CASCADE',
+            onUpdate: 'SET NULL'
+          },
+          fk_submission_issueId: {
+            name: 'fk_submission_issueId',
+            entity: 'Issue',
+            entityKey: 'id',
+            foreignKey: 'issueid',
+            onDelete: 'CASCADE',
+            onUpdate: 'SET NULL'
+          },
+        } */
   }
 })
 export class Submission extends Entity {
   @property({
-    type: 'number',
+    type: 'string',
     id: true,
     generated: true,
     postgresql: {
@@ -37,9 +37,9 @@ export class Submission extends Entity {
       dataType: 'INTEGER',
     },
   })
-  id?: number;
+  id?: string;
   @belongsTo(() => User, {name: 'owner'}, {
-    type: 'number',
+    type: 'string',
     hidden: true,
     postgresql: {
       dataType: 'INTEGER',
@@ -47,17 +47,17 @@ export class Submission extends Entity {
     },
     required: true
   })
-  userId: number;
+  userId: string;
 
   @belongsTo(() => Issue, {name: 'issue'}, {
-    type: 'number',
+    type: 'string',
     postgresql: {
       dataType: 'INTEGER',
       nullable: 'NO',
     },
     required: true
   })
-  issueId: number;
+  issueId: string;
 
 
   @property({
@@ -72,12 +72,12 @@ export class Submission extends Entity {
   status: SubmissionStatus;
 
   @belongsTo(() => Language, {name: 'language'}, {
-    type: 'number',
+    type: 'string',
     postgresql: {
       dataType: 'INTEGER',
     },
   })
-  languageId?: number;
+  languageId?: string;
   @property({
     type: 'string',
     required: true

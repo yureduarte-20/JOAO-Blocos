@@ -103,7 +103,7 @@ export class SubmissionAdminController {
     },
   })
   async findById(
-    @param.path.number('id') id: number,
+    @param.path.string('id') id: string,
     @param.filter(Submission, {exclude: 'where'}) filter?: FilterExcludingWhere<Submission>
   ): Promise<Submission> {
     return this.submissionRepository.findById(id, filter);
@@ -114,7 +114,7 @@ export class SubmissionAdminController {
     description: 'Submission PATCH success',
   })
   async updateById(
-    @param.path.number('id') id: number,
+    @param.path.string('id') id: string,
     @requestBody({
       content: {
         'application/json': {
@@ -132,7 +132,7 @@ export class SubmissionAdminController {
     description: 'Submission PUT success',
   })
   async replaceById(
-    @param.path.number('id') id: number,
+    @param.path.string('id') id: string,
     @requestBody() submission: Submission,
   ): Promise<void> {
     await this.submissionRepository.replaceById(id, submission);
@@ -142,7 +142,7 @@ export class SubmissionAdminController {
   @response(204, {
     description: 'Submission DELETE success',
   })
-  async deleteById(@param.path.number('id') id: number): Promise<void> {
+  async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.submissionRepository.deleteById(id);
   }
 

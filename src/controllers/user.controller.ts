@@ -100,6 +100,6 @@ export class UserController {
   })
   async profile(
   ) {
-    return this.userRepository.findOne({where: {id: parseInt(this.user[securityId])}})
+    return this.userRepository.findOne({where: {id: this.user[securityId] as any}})
   }
 }

@@ -7,12 +7,12 @@ import {Submission} from './submission.model';
     },
     postgresql: {
       table: 'users'
-    }
+    },
   }
 })
 export class User extends Entity {
   @property({
-    type: 'number',
+    type: 'string',
     id: true,
     generated: true,
     postgresql: {
@@ -20,7 +20,7 @@ export class User extends Entity {
       dataType: 'INTEGER',
     },
   })
-  id?: number;
+  id?: string;
   @property({
     type: 'string',
     required: true,
@@ -34,9 +34,9 @@ export class User extends Entity {
     jsonSchema: {
       format: 'email',
     },
-    index: {
-      unique: true
-    }
+    /*     index: {
+          unique: true
+        } */
 
 
   })

@@ -1,6 +1,6 @@
 import {Getter, inject} from '@loopback/core';
 import {DefaultCrudRepository, HasManyRepositoryFactory, repository} from '@loopback/repository';
-import {JsonDataSource} from '../datasources';
+import {MongoDataSource} from '../datasources';
 import {Language, LanguageRelations, Submission} from '../models';
 import {SubmissionRepository} from './submission.repository';
 
@@ -11,7 +11,7 @@ export class LanguageRepository extends DefaultCrudRepository<
 > {
   protected submissions: HasManyRepositoryFactory<Submission, typeof Submission.prototype.id>;
   constructor(
-    @inject('datasources.Json') dataSource: JsonDataSource,
+    @inject('datasources.Mongo') dataSource: MongoDataSource,
     @repository.getter('SubmissionRepository') submissionsRepostoryGetter: Getter<SubmissionRepository>
   ) {
     super(Language, dataSource);
