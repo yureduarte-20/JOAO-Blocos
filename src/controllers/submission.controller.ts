@@ -38,13 +38,13 @@ export class SubmissionController {
                 type: 'string'
               },
               languageId: {
-                type: 'number'
+                type: 'string'
               },
               blocksXml: {
                 type: 'string'
               },
               issueId: {
-                type: 'number',
+                type: 'string',
               }
             }
           }
