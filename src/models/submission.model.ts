@@ -95,6 +95,10 @@ export class Submission extends Entity {
     }
   })
   createdAt: Date;
+  @property.array(Object, {hidden: true})
+  results?: SubmissionStatus[]
+  @property({type: 'number', default: 0})
+  successfulRate: number
   constructor(data?: Partial<Submission>) {
     super(data);
   }

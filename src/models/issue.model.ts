@@ -1,6 +1,11 @@
 import {Entity, hasMany, model, property} from '@loopback/repository';
 import {Submission} from './submission.model';
 
+export interface ITestCase {
+  inputs?: string[];
+  outputs: string;
+  validationOutputRegex?: string
+}
 @model({
   settings: {
     //allowExtendedOperators: true,
@@ -34,17 +39,30 @@ export class Issue extends Entity {
     type: 'string',
   })
   description?: string;
+  @property.array(Object, {
+    jsonSchema: {
+      properties: {
+        inputs: {
+          type: "array",
+          items: {
+            type: "string"
+          }
+        },
+        outputs: {
+          type: 'string',
 
-  @property({
-    type: 'string',
-    required: true,
-    hidden: true
+        },
+        validationOutputRegex: {
+          type: 'string',
+
+        },
+
+      },
+      required: ['outputs']
+    },
+    require: true
   })
-  expectedOutput: string;
-  @property.array(String, {
-    hidden: true
-  })
-  args?: string[];
+  testCases: ITestCase[]
 
   @property({
     required: true,
@@ -63,10 +81,10 @@ export class Issue extends Entity {
   @property.array(String, {
     require: true
   })
-  demonstrationInputs: string[];
+  demonstrationInputs?: string[];
 
   @property.array(String)
-  demonstrationOutputs?: string[];
+  demonstrationOutputs: string[];
 
   constructor(data?: Partial<Issue>) {
     super(data);

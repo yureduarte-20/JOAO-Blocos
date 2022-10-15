@@ -5,7 +5,7 @@ import {execSync} from 'child_process';
 import {unlink, writeFileSync} from 'fs';
 import cron, {ScheduledTask} from 'node-cron';
 import {DockerServiceBindings, NodeJSBindings, SubmissionStatus} from '../keys';
-import {Issue, Language, Submission} from '../models';
+import {Issue, ITestCase, Language, Submission} from '../models';
 import {IssueRepository, LanguageRepository, SubmissionRepository} from '../repositories';
 import {javascriptPrefix} from '../utils/javascriptScript';
 import {DockerService} from './docker.service';
@@ -24,9 +24,7 @@ export interface JudgeBootstraper {
 export class JudgeService implements JudgeBootstraper {
   private readonly absolutePath: string;
   private task: ScheduledTask;
-  private languageCaches: Language[] = [];
-  private issueCaches: Issue[] = [];
-  private MAX_SIMULTANEOUS_EXECUTIONS = 5;
+  private MAX_SIMULTANEOUS_EXECUTIONS = Number(process.env.MAX_SIMULTANEOUS_EXECUTIONS) || 5;
   public avaliable: boolean = true;
   constructor(
     @repository('LanguageRepository')
@@ -60,15 +58,8 @@ export class JudgeService implements JudgeBootstraper {
     return this.submissionsRepository.find({where: {status: SubmissionStatus.PENDING}, limit: this.MAX_SIMULTANEOUS_EXECUTIONS})
   }
   private async getLanguage(languageId: typeof Language.prototype.id): Promise<Language> {
-    this.languageCaches.forEach(element => {
-      if (element.id === languageId) {
-        return element;
-      }
-    });
 
-    let newLanguage = await this.languageRepository.findById(languageId);
-    this.languageCaches.push(newLanguage)
-    return newLanguage
+    return await this.languageRepository.findById(languageId);
 
   }
 
@@ -79,15 +70,7 @@ export class JudgeService implements JudgeBootstraper {
     return Blockly.JavaScript.workspaceToCode(workspace);
   }
   private async getIssue(issueId: typeof Issue.prototype.id) {
-    for (let element of this.issueCaches) {
-      if (element.id === issueId) {
-        return element;
-      }
-    }
-    let newIssue = await this.issueRepository.findById(issueId);
-    this.issueCaches.push(newIssue)
-    return newIssue
-
+    return await this.issueRepository.findById(issueId);
   }
   private async routine(callback?: (err: Error | null) => void) {
     const submissions = await this.getAllPendingSubmissions()
@@ -120,29 +103,60 @@ export class JudgeService implements JudgeBootstraper {
   }
 
 
-  private handleOutput(output: string, issue: Issue) {
-    try {
-      let response = JSON.parse(output);
-      console.log(response)
-      return response.output_as_string == issue.expectedOutput
-    } catch (e) {
+  private handleOutput({output, testCase}: {output: string, testCase: ITestCase}) {
 
-      return output === issue.expectedOutput;
+    if (output == testCase.outputs) {
+      return SubmissionStatus.ACCEPTED
+    }
+    if (testCase.validationOutputRegex) {
+      const regex = new RegExp(testCase.validationOutputRegex);
+      if (regex.test(output)) {
+        return SubmissionStatus.WRONG_ANSWER
+      }
+      return SubmissionStatus.PRESENTATION_ERROR
+    }
+    return SubmissionStatus.WRONG_ANSWER
+
+  }//444803134
+  //2054948743
+
+  private async handleTestCase({issue, submission}: {issue: Issue, submission: Submission}) {
+    const testCases = issue.testCases
+    for (let testCaseIndex = 0; testCaseIndex < testCases.length; testCaseIndex++) {
+      const basePath = this.absolutePath + '/src/tmp/javascriptsCode';
+      const fileName = `${submission.id}-${testCaseIndex}.js`;
+      const code = javascriptPrefix.concat(this.xmlToCode(submission.blocksXml));
+      this.createTmpScript(basePath, fileName, code)
+      try {
+        let output: any = await this.nodeJSService.execute({basePath, fileName}, testCases[testCaseIndex].inputs);
+        output = JSON.parse(output)
+        const answer = this.handleOutput({output: output.output_as_string, testCase: testCases[testCaseIndex]})
+        if (!submission.results)
+          submission.results = []
+        submission.results.push(answer);
+        this.deleteTmpScript(basePath, fileName);
+      } catch (e) {
+        throw e
+      }
     }
   }
-
-
   async handleSubmission(submission: Submission) {
-    let issue = await this.getIssue(submission.issueId)
-    const basePath = this.absolutePath + '/src/tmp/javascriptsCode';
-    const fileName = `${submission.id}.js`;
-    const code = javascriptPrefix.concat(this.xmlToCode(submission.blocksXml));
-    this.createTmpScript(basePath, fileName, code)
+    let issue = await this.getIssue(submission.issueId);
     try {
-      const output = await this.nodeJSService.execute({fileName, basePath}, issue.args)
-      this.handleOutput(output, issue) ?
-        submission.status = SubmissionStatus.ACCEPTED :
+      await this.handleTestCase({issue, submission});
+      if (submission.results?.every((v) => v == SubmissionStatus.ACCEPTED)) {
+        submission.status = SubmissionStatus.ACCEPTED
+      } else if (submission.results?.some(el => el == SubmissionStatus.PRESENTATION_ERROR)) {
         submission.status = SubmissionStatus.PRESENTATION_ERROR
+      } else {
+        let count = 0
+        submission.status = SubmissionStatus.WRONG_ANSWER
+        submission.results?.forEach(v => {
+          if (v == SubmissionStatus.ACCEPTED) count++;
+        })
+        if (submission.results)
+          submission.successfulRate = Number((count / submission.results.length).toFixed(2));
+      }
     } catch (err) {
       console.log(err.name)
       err instanceof TimeOutError ?
@@ -150,7 +164,7 @@ export class JudgeService implements JudgeBootstraper {
         submission.status = SubmissionStatus.RUNTIME_ERROR
       submission.error = JSON.stringify({message: err.message, name: err.name, stack: err.stack})
     } finally {
-      this.deleteTmpScript(basePath, fileName);
+      //  this.deleteTmpScript(basePath, fileName);
       await this.changeSubmission(submission)
     }
   }
