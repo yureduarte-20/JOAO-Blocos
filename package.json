@@ -35,8 +35,7 @@
     "start": "node -r source-map-support/register .",
     "clean": "lb-clean dist *.tsbuildinfo .eslintcache",
     "rebuild": "yarn run clean && yarn run build",
-    "start:prod": "node dist/index.js",
-    "postinstall": "npm run build"
+    "start:prod": "node dist/index.js"
   },
   "repository": {
     "type": "git",

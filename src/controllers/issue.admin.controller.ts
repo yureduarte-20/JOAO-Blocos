@@ -113,7 +113,7 @@ export class IssueAdminController {
   ): Promise<Count> {
     return this.issueRepository.updateAll(issue, where);
   }
-  @get('/issues/{id}')
+  @get('/admin/issues/{id}')
   @response(200, {
     description: 'Issue model instance',
     content: {

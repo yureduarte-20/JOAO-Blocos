@@ -6,6 +6,11 @@ export interface ITestCase {
   outputs: string;
   validationOutputRegex?: string
 }
+
+export interface IDemonstrations {
+  demonstrationInputs?: string[];
+  demonstrationOutput: string;
+}
 @model({
   settings: {
     //allowExtendedOperators: true,
@@ -78,14 +83,25 @@ export class Issue extends Entity {
   @hasMany(() => Submission, {name: 'submissions'})
   submissions?: Submission[]
 
-  @property.array(String, {
-    require: true
+  @property.array(Object, {
+    required: true,
+    jsonSchema: {
+      properties: {
+        demonstrationInputs: {
+          type: 'array',
+          items: {
+            type: 'string'
+          }
+        },
+        demonstrationOutput: {
+          type: 'string'
+        }
+      },
+      required: ['demonstrationOutput']
+    },
+
   })
-  demonstrationInputs?: string[];
-
-  @property.array(String)
-  demonstrationOutputs: string[];
-
+  demonstrations: IDemonstrations[]
   constructor(data?: Partial<Issue>) {
     super(data);
   }

@@ -5,7 +5,7 @@ import {execSync} from 'child_process';
 import {unlink, writeFileSync} from 'fs';
 import cron, {ScheduledTask} from 'node-cron';
 import {DockerServiceBindings, NodeJSBindings, SubmissionStatus} from '../keys';
-import {Issue, ITestCase, Language, Submission} from '../models';
+import {Issue, ITestCase, Submission} from '../models';
 import {IssueRepository, LanguageRepository, SubmissionRepository} from '../repositories';
 import {javascriptPrefix} from '../utils/javascriptScript';
 import {DockerService} from './docker.service';
@@ -56,11 +56,6 @@ export class JudgeService implements JudgeBootstraper {
   }
   private getAllPendingSubmissions(): Promise<Submission[]> {
     return this.submissionsRepository.find({where: {status: SubmissionStatus.PENDING}, limit: this.MAX_SIMULTANEOUS_EXECUTIONS})
-  }
-  private async getLanguage(languageId: typeof Language.prototype.id): Promise<Language> {
-
-    return await this.languageRepository.findById(languageId);
-
   }
 
   private xmlToCode(xmlText: string) {
@@ -113,7 +108,6 @@ export class JudgeService implements JudgeBootstraper {
       if (regex.test(output)) {
         return SubmissionStatus.WRONG_ANSWER
       }
-      return SubmissionStatus.PRESENTATION_ERROR
     }
     return SubmissionStatus.WRONG_ANSWER
 
@@ -151,11 +145,12 @@ export class JudgeService implements JudgeBootstraper {
       } else {
         let count = 0
         submission.status = SubmissionStatus.WRONG_ANSWER
-        submission.results?.forEach(v => {
-          if (v == SubmissionStatus.ACCEPTED) count++;
-        })
-        if (submission.results)
+        if (submission.results) {
+          submission.results?.forEach(v => {
+            if (v == SubmissionStatus.ACCEPTED) count++;
+          })
           submission.successfulRate = Number((count / submission.results.length).toFixed(2));
+        }
       }
     } catch (err) {
       console.log(err.name)
