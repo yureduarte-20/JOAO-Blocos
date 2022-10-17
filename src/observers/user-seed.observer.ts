@@ -4,7 +4,7 @@ import {
   LifeCycleObserver
 } from '@loopback/core';
 import {repository} from '@loopback/repository';
-import {PasswordHasherBindings} from '../keys';
+import {PasswordHasherBindings, Roles} from '../keys';
 import {UserRepository} from '../repositories';
 import {PasswordHasher} from '../services/hash.password';
 
@@ -38,19 +38,16 @@ export class UserSeedObserver implements LifeCycleObserver {
   async start(): Promise<void> {
     const email = process.env.ADMIN_EMAIL ?? ''
     const password = process.env.ADMIN_PASSWORD ?? ''
-    if (email == '' || password == '') return console.warn('Não há admins configurados nas variáveis de ambiente!')
-    this.userRepository.findOne({where: {email}}).then((user => {
-      if (user) return
-      this.hasher.hashPassword(password).then(encrypted => {
-        this.userRepository.create({
-          email, password: encrypted, name: 'Usuário admin padrão'
-        }).then(s => {
-          console.log('Criado com sucesso!');
-        }).catch(reason => {
-          console.error('Não foi possível criar o usuário padrão', reason);
-        })
-      })
-    }))
+    if (email == '' || password == '') return console.warn('Não há admin configurados nas variáveis de ambiente!')
+    const u = await this.userRepository.findOne({where: {email}});
+    if (u) return
+    const encrypted = await this.hasher.hashPassword(password);
+    await this.userRepository.create({
+      name: 'Usuário Admin Padrão',
+      password: encrypted,
+      email,
+      role: Roles.ADMIN
+    })
 
   }
 

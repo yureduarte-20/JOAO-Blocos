@@ -105,9 +105,10 @@ export class JudgeService implements JudgeBootstraper {
     }
     if (testCase.validationOutputRegex) {
       const regex = new RegExp(testCase.validationOutputRegex);
-      if (regex.test(output)) {
-        return SubmissionStatus.WRONG_ANSWER
+      if (!regex.test(output)) {
+        return SubmissionStatus.PRESENTATION_ERROR
       }
+
     }
     return SubmissionStatus.WRONG_ANSWER
 
