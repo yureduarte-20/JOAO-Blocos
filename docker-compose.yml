@@ -10,8 +10,8 @@ services:
    ports:
      - 27017:27017
    environment:
-     - MONGO_INITDB_ROOT_USERNAME=yure
-     - MONGO_INITDB_ROOT_PASSWORD=mongo123
+     - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+     - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
   judge:
     ## nome do serviço
     image: judge_image

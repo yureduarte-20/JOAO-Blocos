@@ -57,11 +57,11 @@ export class IssueController {
   ): Promise<Issue[]> {
 
     if (!withSubmissions) {
-      return this.issueRepository.find({...filter, include: undefined})
+      return this.issueRepository.find({...filter, include: undefined, fields: {...filter?.fields, testCases: false}})
     }
     return this.issueRepository.find({
       ...filter,
-      fields: {testCases: false},
+      fields: {...filter?.fields, testCases: false},
       include: [{
         relation: 'submissions',
         scope: {
@@ -87,7 +87,7 @@ export class IssueController {
     @param.path.string('id') id: string,
     @param.filter(Issue, {exclude: 'where'}) filter?: FilterExcludingWhere<Issue>
   ): Promise<Issue> {
-    return this.issueRepository.findById(id, {...filter, fields: {testCases: false}});
+    return this.issueRepository.findById(id, {...filter, fields: {...filter?.fields, testCases: false}});
   }
 
 }

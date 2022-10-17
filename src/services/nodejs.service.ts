@@ -4,7 +4,7 @@ export interface IFileNodejsProp {
   basePath: string, fileName: string,
 }
 export default class NodeJSService {
-  private TIMEOUT_IN_SECONDS = 5;
+  private TIMEOUT_IN_SECONDS = Number(process.env.TIMEOUT_EXECUTION_IN_SECONDS) || 5;
   async execute({basePath, fileName}: IFileNodejsProp, args?: string[]) {
     let saidas: string;
     let erros: string;
