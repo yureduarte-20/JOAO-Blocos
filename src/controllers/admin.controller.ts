@@ -1,5 +1,7 @@
 //import {authenticate} from '@loopback/authentication';
 //import {authorize} from '@loopback/authorization';
+import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 import {inject} from '@loopback/core';
 import {
   Count,
@@ -17,12 +19,12 @@ import {
   RestBindings
 } from '@loopback/rest';
 import {execFileSync} from 'child_process';
-import {UserServiceBindings} from '../keys';
+import {Roles, UserServiceBindings} from '../keys';
 import {User} from '../models';
 import {UserRepository} from '../repositories';
 import {MyUserService} from '../services/user.service';
-//@authenticate("jwt")
-//@authorize({allowedRoles: [Roles.ADMIN]})
+@authenticate("jwt")
+@authorize({allowedRoles: [Roles.ADMIN]})
 export class AdminController {
   constructor(
     @inject(RestBindings.Http.RESPONSE) private response: Response,

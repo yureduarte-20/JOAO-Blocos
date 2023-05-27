@@ -1,5 +1,6 @@
 import {Entity, hasMany, model, property} from '@loopback/repository';
 import {Submission} from './submission.model';
+import {Doubt} from './doubt.model';
 
 export interface ITestCase {
   inputs?: string[];
@@ -16,7 +17,7 @@ export interface IDemonstrations {
     //allowExtendedOperators: true,
   },
 })
-export class Issue extends Entity {
+export class Problem extends Entity {
   @property({
     type: 'string',
     id: true,
@@ -102,13 +103,17 @@ export class Issue extends Entity {
 
   })
   demonstrations: IDemonstrations[]
-  constructor(data?: Partial<Issue>) {
+
+  @hasMany(() => Doubt)
+  doubts: Doubt[];
+
+  constructor(data?: Partial<Problem>) {
     super(data);
   }
 }
 
-export interface IssueRelations {
+export interface ProblemRelations {
   // describe navigational properties here
 }
 
-export type IssueWithRelations = Issue & IssueRelations;
+export type ProblemWithRelations = Problem & ProblemRelations;

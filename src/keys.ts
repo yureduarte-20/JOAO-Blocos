@@ -29,8 +29,8 @@ export namespace NodeJSBindings {
 }
 export const enum Roles {
   ADMIN = 'ADMIN',
-  COLLABORATOR = 'COLLABORATOR',
-  CONSUMER = 'CONSUMER'
+  ADVISOR = 'ADVISOR',
+  STUDENT = 'STUDENT'
 }
 export const enum SubmissionStatus {
   ACCEPTED = 'ACCEPTED',

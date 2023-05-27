@@ -8,23 +8,21 @@ import {get, getModelSchemaRef, param, post, requestBody, response} from '@loopb
 import {securityId, UserProfile} from '@loopback/security';
 import {Roles, SubmissionStatus} from '../keys';
 import {Submission} from '../models';
-import {IssueRepository, LanguageRepository, SubmissionRepository} from '../repositories';
+import {ProblemRepository, SubmissionRepository} from '../repositories';
 
 @authenticate("jwt")
 export class SubmissionController {
   constructor(
     @inject(AuthenticationBindings.CURRENT_USER)
     private user: UserProfile,
-    @repository('IssueRepository')
-    private issueRepository: IssueRepository,
-    @repository('SubmissionRepository')
+    @repository(ProblemRepository)
+    private problemRepository: ProblemRepository,
+    @repository(SubmissionRepository)
     private submissionsRepository: SubmissionRepository,
-    @repository('LanguageRepository')
-    private languageRepository: LanguageRepository
   ) { }
 
-  @authorize({allowedRoles: [Roles.ADMIN, Roles.COLLABORATOR, Roles.CONSUMER]})
-  @post('/submission')
+  @authorize({allowedRoles: [Roles.ADMIN, Roles.ADVISOR, Roles.STUDENT]})
+  @post('/problems/{id}/submissions')
   @response(200, {
     description: 'execution of javascript code'
   })
@@ -34,41 +32,28 @@ export class SubmissionController {
         'application/json': {
           schema: {
             properties: {
-              code: {
-                type: 'string'
-              },
-              languageId: {
-                type: 'string'
-              },
               blocksXml: {
                 type: 'string'
-              },
-              issueId: {
-                type: 'string',
               }
-            }
+            },
+            required: ['blocksXml']
           }
         }
       }
     })
-    body: {code: string, languageId?: string, blocksXml?: string, issueId: string},
-
+    body: {blocksXml: string},
+    @param.path.string('id') problemId: string,
 
   ): Promise<any> {
-
-    const issue = await this.issueRepository.findById(body.issueId, {fields: {id: true}});
-    if (body.languageId)
-      await this.languageRepository.findById(body.languageId, {fields: {id: true}})
-    return this.submissionsRepository.create({
+    const problem = await this.problemRepository.findById(problemId, {fields: {id: true}});
+    return this.problemRepository.submissions(problemId).create({
       userId: this.user[securityId] as any,
       status: SubmissionStatus.PENDING,
-      issueId: issue.id as any,
-      code: body.code,
-      languageId: body.languageId as any,
+      problemId: problem.id as any,
       blocksXml: body.blocksXml
-    });
+    })
   }
-  @authorize({allowedRoles: [Roles.ADMIN, Roles.COLLABORATOR, Roles.CONSUMER]})
+  @authorize({allowedRoles: [Roles.ADMIN, Roles.ADVISOR, Roles.STUDENT]})
   @get('/submissions')
   @response(200, {
     description: 'users submissions',

@@ -5,8 +5,8 @@ import {execSync} from 'child_process';
 import {unlink, writeFileSync} from 'fs';
 import cron, {ScheduledTask} from 'node-cron';
 import {DockerServiceBindings, NodeJSBindings, SubmissionStatus} from '../keys';
-import {Issue, ITestCase, Submission} from '../models';
-import {IssueRepository, LanguageRepository, SubmissionRepository} from '../repositories';
+import {ITestCase, Problem, Submission} from '../models';
+import {ProblemRepository, SubmissionRepository} from '../repositories';
 import {javascriptPrefix} from '../utils/javascriptScript';
 import {DockerService} from './docker.service';
 import NodeJSService from './nodejs.service';
@@ -27,14 +27,12 @@ export class JudgeService implements JudgeBootstraper {
   private MAX_SIMULTANEOUS_EXECUTIONS = Number(process.env.MAX_SIMULTANEOUS_EXECUTIONS) || 5;
   public avaliable: boolean = true;
   constructor(
-    @repository('LanguageRepository')
-    private languageRepository: LanguageRepository,
-    @repository('SubmissionRepository')
+    @repository(SubmissionRepository)
     private submissionsRepository: SubmissionRepository,
     @inject(DockerServiceBindings.DOCKER)
     private dockerService: DockerService,
-    @repository('IssueRepository')
-    private issueRepository: IssueRepository,
+    @repository(ProblemRepository)
+    private problemRepository: ProblemRepository,
     @inject(NodeJSBindings.NODE_JS_SERVICE)
     private nodeJSService: NodeJSService
   ) {
@@ -64,8 +62,8 @@ export class JudgeService implements JudgeBootstraper {
     Blockly.Xml.domToWorkspace(xml, workspace);
     return Blockly.JavaScript.workspaceToCode(workspace);
   }
-  private async getIssue(issueId: typeof Issue.prototype.id) {
-    return await this.issueRepository.findById(issueId);
+  private async getIssue(issueId: typeof Problem.prototype.id) {
+    return await this.problemRepository.findById(issueId);
   }
   private async routine(callback?: (err: Error | null) => void) {
     const submissions = await this.getAllPendingSubmissions()
@@ -115,7 +113,7 @@ export class JudgeService implements JudgeBootstraper {
   }//444803134
   //2054948743
 
-  private async handleTestCase({issue, submission}: {issue: Issue, submission: Submission}) {
+  private async handleTestCase({issue, submission}: {issue: Problem, submission: Submission}) {
     const testCases = issue.testCases
     for (let testCaseIndex = 0; testCaseIndex < testCases.length; testCaseIndex++) {
       const basePath = this.absolutePath + '/src/tmp/javascriptsCode';
@@ -136,7 +134,7 @@ export class JudgeService implements JudgeBootstraper {
     }
   }
   async handleSubmission(submission: Submission) {
-    let issue = await this.getIssue(submission.issueId);
+    let issue = await this.getIssue(submission.problemId);
     try {
       await this.handleTestCase({issue, submission});
       if (submission.results?.every((v) => v == SubmissionStatus.ACCEPTED)) {

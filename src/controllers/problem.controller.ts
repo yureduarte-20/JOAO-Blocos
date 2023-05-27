@@ -15,51 +15,51 @@ import {
 } from '@loopback/rest';
 import {securityId, UserProfile} from '@loopback/security';
 import {Roles} from '../keys';
-import {Issue} from '../models';
-import {IssueRepository} from '../repositories';
+import {Problem} from '../models';
+import {ProblemRepository} from '../repositories';
 @authenticate("jwt")
-@authorize({allowedRoles: [Roles.ADMIN, Roles.COLLABORATOR, Roles.CONSUMER]})
-export class IssueController {
+@authorize({allowedRoles: [Roles.ADMIN, Roles.ADVISOR, Roles.STUDENT]})
+export class ProblemController {
   constructor(
-    @repository(IssueRepository)
-    public issueRepository: IssueRepository,
+    @repository(ProblemRepository)
+    public problemRepository: ProblemRepository,
     @inject(AuthenticationBindings.CURRENT_USER)
     private user: UserProfile
   ) { }
 
 
-  @get('/issues/count')
+  @get('/problems/count')
   @response(200, {
     description: 'Issue model count',
     content: {'application/json': {schema: CountSchema}},
   })
   async count(
-    @param.where(Issue) where?: Where<Issue>,
+    @param.where(Problem) where?: Where<Problem>,
   ): Promise<Count> {
-    return this.issueRepository.count(where);
+    return this.problemRepository.count(where);
   }
 
-  @get('/issues')
+  @get('/problems')
   @response(200, {
     description: 'Array of Issue model instances',
     content: {
       'application/json': {
         schema: {
           type: 'array',
-          items: getModelSchemaRef(Issue, {includeRelations: true}),
+          items: getModelSchemaRef(Problem, {includeRelations: true}),
         },
       },
     },
   })
   async find(
-    @param.filter(Issue) filter?: Filter<Issue>,
+    @param.filter(Problem) filter?: Filter<Problem>,
     @param.query.boolean('withSubmissions') withSubmissions?: boolean
-  ): Promise<Issue[]> {
+  ): Promise<Problem[]> {
 
     if (!withSubmissions) {
-      return this.issueRepository.find({...filter, include: undefined, fields: {...filter?.fields, testCases: false}})
+      return this.problemRepository.find({...filter, include: undefined, fields: {...filter?.fields, testCases: false}})
     }
-    return this.issueRepository.find({
+    return this.problemRepository.find({
       ...filter,
       fields: {...filter?.fields, testCases: false},
       include: [{
@@ -74,20 +74,20 @@ export class IssueController {
   }
 
 
-  @get('/issues/{id}')
+  @get('/problems/{id}')
   @response(200, {
     description: 'Issue model instance',
     content: {
       'application/json': {
-        schema: getModelSchemaRef(Issue, {includeRelations: true}),
+        schema: getModelSchemaRef(Problem, {includeRelations: true}),
       },
     },
   })
   async findById(
     @param.path.string('id') id: string,
-    @param.filter(Issue, {exclude: 'where'}) filter?: FilterExcludingWhere<Issue>
-  ): Promise<Issue> {
-    return this.issueRepository.findById(id, {...filter, fields: {...filter?.fields, testCases: false}});
+    @param.filter(Problem, {exclude: 'where'}) filter?: FilterExcludingWhere<Problem>
+  ): Promise<Problem> {
+    return this.problemRepository.findById(id, {...filter, fields: {...filter?.fields, testCases: false}});
   }
 
 }

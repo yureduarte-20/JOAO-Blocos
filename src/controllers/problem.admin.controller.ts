@@ -16,74 +16,74 @@ import {
 } from '@loopback/rest';
 import {securityId, UserProfile} from '@loopback/security';
 import {Roles} from '../keys';
-import {Issue, IssueRelations} from '../models';
-import {IssueRepository, SubmissionRepository} from '../repositories';
+import {Problem, ProblemRelations} from '../models';
+import {ProblemRepository, SubmissionRepository} from '../repositories';
 interface Solved {
   solved: boolean
 }
-type IssueSolved = Issue & IssueRelations & Solved;
+type ProblemSolved = Problem & ProblemRelations & Solved;
 @authenticate('jwt')
 @authorize({allowedRoles: [Roles.ADMIN]})
-export class IssueAdminController {
+export class ProblemAdminController {
   constructor(
-    @repository(IssueRepository)
-    public issueRepository: IssueRepository,
+    @repository(ProblemRepository)
+    public problemRepository: ProblemRepository,
     @inject(AuthenticationBindings.CURRENT_USER)
     private user: UserProfile,
     @repository('SubmissionRepository')
     private submissionRepository: SubmissionRepository
   ) { }
-  @post('/admin/issues')
+  @post('/admin/problems')
   @response(200, {
     description: 'Issue model instance',
-    content: {'application/json': {schema: getModelSchemaRef(Issue)}},
+    content: {'application/json': {schema: getModelSchemaRef(Problem)}},
   })
   async create(
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Issue, {
+          schema: getModelSchemaRef(Problem, {
             title: 'NewIssue',
             exclude: ['id'],
           }),
         },
       },
     })
-    issue: Omit<Issue, 'id'>,
-  ): Promise<Issue> {
-    return this.issueRepository.create(issue);
+    issue: Omit<Problem, 'id'>,
+  ): Promise<Problem> {
+    return this.problemRepository.create(issue);
   }
-  @get('/admin/issues/count')
+  @get('/admin/problems/count')
   @response(200, {
     description: 'Issue model count',
     content: {'application/json': {schema: CountSchema}},
   })
   async count(
-    @param.where(Issue) where?: Where<Issue>,
+    @param.where(Problem) where?: Where<Problem>,
   ): Promise<Count> {
-    return this.issueRepository.count(where);
+    return this.problemRepository.count(where);
   }
-  @get('/admin/issues')
+  @get('/admin/problems')
   @response(200, {
     description: 'Array of Issue model instances',
     content: {
       'application/json': {
         schema: {
           type: 'array',
-          items: getModelSchemaRef(Issue, {includeRelations: true}),
+          items: getModelSchemaRef(Problem, {includeRelations: true}),
         },
       },
     },
   })
   async find(
-    @param.filter(Issue) filter?: Filter<Issue>,
+    @param.filter(Problem) filter?: Filter<Problem>,
     @param.query.boolean('withSubmissions') withSubmissions?: boolean
-  ): Promise<Issue[] | IssueSolved[]> {
+  ): Promise<Problem[] | ProblemSolved[]> {
 
     if (!withSubmissions) {
-      return this.issueRepository.find({...filter, include: undefined})
+      return this.problemRepository.find({...filter, include: undefined})
     }
-    const issues = await this.issueRepository.find({
+    const problems = await this.problemRepository.find({
       ...filter,
       include: [{
         relation: 'submissions',
@@ -93,9 +93,9 @@ export class IssueAdminController {
       }]
     })
 
-    return issues;
+    return problems;
   }
-  @patch('/admin/issues')
+  @patch('/admin/problems')
   @response(200, {
     description: 'Issue PATCH success count',
     content: {'application/json': {schema: CountSchema}},
@@ -104,31 +104,31 @@ export class IssueAdminController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Issue, {partial: true}),
+          schema: getModelSchemaRef(Problem, {partial: true}),
         },
       },
     })
-    issue: Issue,
-    @param.where(Issue) where?: Where<Issue>,
+    issue: Problem,
+    @param.where(Problem) where?: Where<Problem>,
   ): Promise<Count> {
-    return this.issueRepository.updateAll(issue, where);
+    return this.problemRepository.updateAll(issue, where);
   }
-  @get('/admin/issues/{id}')
+  @get('/admin/problems/{id}')
   @response(200, {
     description: 'Issue model instance',
     content: {
       'application/json': {
-        schema: getModelSchemaRef(Issue, {includeRelations: true}),
+        schema: getModelSchemaRef(Problem, {includeRelations: true}),
       },
     },
   })
   async findById(
     @param.path.string('id') id: string,
-    @param.filter(Issue, {exclude: 'where'}) filter?: FilterExcludingWhere<Issue>
-  ): Promise<Issue> {
-    return this.issueRepository.findById(id, filter);
+    @param.filter(Problem, {exclude: 'where'}) filter?: FilterExcludingWhere<Problem>
+  ): Promise<Problem> {
+    return this.problemRepository.findById(id, filter);
   }
-  @patch('/admin/issues/{id}')
+  @patch('/admin/problems/{id}')
   @response(204, {
     description: 'Issue PATCH success',
   })
@@ -137,29 +137,29 @@ export class IssueAdminController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Issue, {partial: true}),
+          schema: getModelSchemaRef(Problem, {partial: true}),
         },
       },
     })
-    issue: Issue,
+    issue: Problem,
   ): Promise<void> {
-    await this.issueRepository.updateById(id, issue);
+    await this.problemRepository.updateById(id, issue);
   }
-  @put('/admin/issues/{id}')
+  @put('/admin/problems/{id}')
   @response(204, {
     description: 'Issue PUT success',
   })
   async replaceById(
     @param.path.string('id') id: string,
-    @requestBody() issue: Issue,
+    @requestBody() issue: Problem,
   ): Promise<void> {
-    await this.issueRepository.replaceById(id, issue);
+    await this.problemRepository.replaceById(id, issue);
   }
-  @del('/admin/issues/{id}')
+  @del('/admin/problems/{id}')
   @response(204, {
     description: 'Issue DELETE success',
   })
   async deleteById(@param.path.string('id') id: string): Promise<void> {
-    await this.issueRepository.deleteById(id);
+    await this.problemRepository.deleteById(id);
   }
 }

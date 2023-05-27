@@ -1,5 +1,7 @@
-import {Entity, hasMany, model, property} from '@loopback/repository';
+import {Entity, hasMany, model, property, hasOne} from '@loopback/repository';
 import {Submission} from './submission.model';
+import {Doubt} from './doubt.model';
+
 @model({
   settings: {
     mysql: {
@@ -70,6 +72,13 @@ export class User extends Entity {
   role: string;
   @hasMany(() => Submission, {name: 'submissions'})
   submissions: Submission[];
+
+  @hasOne(() => Doubt, {keyTo: 'studentId'})
+  doubt: Doubt;
+
+  @hasMany(() => Doubt, {keyTo: 'advisorId'})
+  doubts: Doubt[];
+
   constructor(data?: Partial<User>) {
     super(data);
   }

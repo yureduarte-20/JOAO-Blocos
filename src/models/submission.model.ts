@@ -1,7 +1,6 @@
 import {belongsTo, Entity, model, property} from '@loopback/repository';
 import {SubmissionStatus} from '../keys';
-import {Issue} from './issue.model';
-import {Language} from './language.model';
+import {Problem} from './problem.model';
 import {User} from './user.model';
 
 @model({
@@ -49,7 +48,7 @@ export class Submission extends Entity {
   })
   userId: string;
 
-  @belongsTo(() => Issue, {name: 'issue'}, {
+  @belongsTo(() => Problem, {name: 'problem'}, {
     type: 'string',
     postgresql: {
       dataType: 'INTEGER',
@@ -57,7 +56,7 @@ export class Submission extends Entity {
     },
     required: true
   })
-  issueId: string;
+  problemId: string;
 
 
   @property({
@@ -71,13 +70,6 @@ export class Submission extends Entity {
   })
   status: SubmissionStatus;
 
-  @belongsTo(() => Language, {name: 'language'}, {
-    type: 'string',
-    postgresql: {
-      dataType: 'INTEGER',
-    },
-  })
-  languageId?: string;
   @property({
     type: 'string',
     required: true
