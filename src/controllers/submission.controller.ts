@@ -69,4 +69,21 @@ export class SubmissionController {
     return this.submissionsRepository.find({...filter, where: {...filter?.where, userId: this.user[securityId] as any}})
   }
 
+  @authorize({allowedRoles: [Roles.ADMIN, Roles.ADVISOR, Roles.STUDENT]})
+  @get('/submissions/{id}')
+  @response(200, {
+    description: 'users submissions',
+    content: {
+      'application/json': {
+        schema: getModelSchemaRef(Submission)
+      }
+    }
+  })
+  async findById(
+    @param.path.string('id') problemId: string,
+    @param.filter(Submission) filter?: Filter<Submission>
+  ): Promise<Submission | null> {
+    return this.submissionsRepository.findOne({...filter, where: {...filter?.where, id: problemId, userId: this.user[securityId] as any}})
+  }
+
 }
