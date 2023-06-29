@@ -1,6 +1,7 @@
 import {Entity, hasMany, model, property} from '@loopback/repository';
 import {Doubt} from './doubt.model';
 import {Submission} from './submission.model';
+import {Draft} from './draft.model';
 
 @model({
   settings: {
@@ -76,6 +77,9 @@ export class User extends Entity {
 
   @hasMany(() => Doubt, {keyTo: 'studentId'})
   studentDoubts: Doubt[];
+
+  @hasMany(() => Draft)
+  drafts: Draft[];
 
   constructor(data?: Partial<User>) {
     super(data);

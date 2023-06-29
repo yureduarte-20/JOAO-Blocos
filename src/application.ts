@@ -35,6 +35,7 @@ export class JudgeApplication extends BootMixin(
     this.configure(RestExplorerBindings.COMPONENT).to({
       path: '/explorer',
     });
+    // this.basePath('/api')
     this.component(RestExplorerComponent);
     this.component(AuthenticationComponent);
     this.component(JWTAuthenticationComponent);
@@ -52,7 +53,9 @@ export class JudgeApplication extends BootMixin(
         dirs: ['controllers'],
         extensions: ['.controller.js'],
         nested: true,
+
       },
+
     };
   }
 }
