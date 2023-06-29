@@ -78,13 +78,13 @@ export class Doubt extends Entity {
   closedAt?: string
 
   @belongsTo(() => User)
-  studentId: string;
-
-  @belongsTo(() => User)
   advisorId: string;
 
   @belongsTo(() => Problem)
   problemId: string;
+
+  @belongsTo(() => User)
+  studentId: string;
 
   constructor(data?: Partial<Doubt>) {
     super(data);

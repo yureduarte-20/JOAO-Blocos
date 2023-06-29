@@ -1,6 +1,6 @@
-import {Entity, hasMany, model, property, hasOne} from '@loopback/repository';
-import {Submission} from './submission.model';
+import {Entity, hasMany, model, property} from '@loopback/repository';
 import {Doubt} from './doubt.model';
+import {Submission} from './submission.model';
 
 @model({
   settings: {
@@ -39,8 +39,6 @@ export class User extends Entity {
     /*     index: {
           unique: true
         } */
-
-
   })
   email: string;
 
@@ -73,11 +71,11 @@ export class User extends Entity {
   @hasMany(() => Submission, {name: 'submissions'})
   submissions: Submission[];
 
-  @hasOne(() => Doubt, {keyTo: 'studentId'})
-  doubt: Doubt;
-
   @hasMany(() => Doubt, {keyTo: 'advisorId'})
   doubts: Doubt[];
+
+  @hasMany(() => Doubt, {keyTo: 'studentId'})
+  studentDoubts: Doubt[];
 
   constructor(data?: Partial<User>) {
     super(data);

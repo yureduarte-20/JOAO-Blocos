@@ -1,9 +1,9 @@
 import {Getter, inject} from '@loopback/core';
-import {DefaultCrudRepository, HasManyRepositoryFactory, repository, HasOneRepositoryFactory} from '@loopback/repository';
+import {DefaultCrudRepository, HasManyRepositoryFactory, repository} from '@loopback/repository';
 import {MongoDataSource} from '../datasources';
-import {Submission, User, UserRelations, Doubt} from '../models';
-import {SubmissionRepository} from './submission.repository';
+import {Doubt, Submission, User, UserRelations} from '../models';
 import {DoubtRepository} from './doubt.repository';
+import {SubmissionRepository} from './submission.repository';
 
 export class UserRepository extends DefaultCrudRepository<
   User,
@@ -12,9 +12,9 @@ export class UserRepository extends DefaultCrudRepository<
 > {
   protected submissions: HasManyRepositoryFactory<Submission, typeof Submission.prototype.id>;
 
-  public readonly doubt: HasOneRepositoryFactory<Doubt, typeof User.prototype.id>;
-
   public readonly doubts: HasManyRepositoryFactory<Doubt, typeof User.prototype.id>;
+
+  public readonly studentDoubts: HasManyRepositoryFactory<Doubt, typeof User.prototype.id>;
 
   constructor(
     @inject('datasources.Mongo') dataSource: MongoDataSource,
@@ -22,10 +22,10 @@ export class UserRepository extends DefaultCrudRepository<
 
   ) {
     super(User, dataSource);
+    this.studentDoubts = this.createHasManyRepositoryFactoryFor('studentDoubts', doubtRepositoryGetter,);
+    this.registerInclusionResolver('studentDoubts', this.studentDoubts.inclusionResolver);
     this.doubts = this.createHasManyRepositoryFactoryFor('doubts', doubtRepositoryGetter,);
     this.registerInclusionResolver('doubts', this.doubts.inclusionResolver);
-    this.doubt = this.createHasOneRepositoryFactoryFor('doubt', doubtRepositoryGetter);
-    this.registerInclusionResolver('doubt', this.doubt.inclusionResolver);
     this.submissions = this.createHasManyRepositoryFactoryFor('submissions', submissionsRepostoryGetter);
     this.registerInclusionResolver('submissions', this.submissions.inclusionResolver);
   }

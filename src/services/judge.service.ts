@@ -115,8 +115,8 @@ export class JudgeService implements JudgeBootstraper {
 
   private async handleTestCase({issue, submission}: {issue: Problem, submission: Submission}) {
     const testCases = issue.testCases
+    const basePath = this.absolutePath + '/src/tmp/javascriptsCode';
     for (let testCaseIndex = 0; testCaseIndex < testCases.length; testCaseIndex++) {
-      const basePath = this.absolutePath + '/src/tmp/javascriptsCode';
       const fileName = `${submission.id}-${testCaseIndex}.js`;
       const code = javascriptPrefix.concat(this.xmlToCode(submission.blocksXml));
       this.createTmpScript(basePath, fileName, code)
