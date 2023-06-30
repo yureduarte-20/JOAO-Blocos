@@ -12,6 +12,7 @@ import {
   get,
   getModelSchemaRef,
   getWhereSchemaFor,
+  HttpErrors,
   param,
   patch,
   post,
@@ -21,13 +22,13 @@ import {securityId, UserProfile} from '@loopback/security';
 import {
   Draft
 } from '../models';
-import {UserRepository} from '../repositories';
+import {DraftRepository, UserRepository} from '../repositories';
 @authenticate({strategy: 'jwt'})
 export class UserDraftController {
   constructor(
     @repository(UserRepository) protected userRepository: UserRepository,
-    @inject(AuthenticationBindings.CURRENT_USER)
-    private currentUser: UserProfile,
+    @inject(AuthenticationBindings.CURRENT_USER) private currentUser: UserProfile,
+    @repository(DraftRepository) private draftsRepository: DraftRepository
   ) { }
 
   @get('/users/drafts', {
@@ -70,6 +71,7 @@ export class UserDraftController {
     }) draft: Omit<Draft, 'id'>,
   ): Promise<Draft> {
     delete draft.createdAt, draft.updatedAt;
+
     return this.userRepository.drafts(this.currentUser[securityId]).create(draft);
   }
 
@@ -97,6 +99,30 @@ export class UserDraftController {
     return this.userRepository.drafts(this.currentUser[securityId]).patch(draft, where);
   }
 
+  @patch('/users/drafts/{id}', {
+    responses: {
+      '204': {
+        description: 'User.Draft PATCH success count',
+        content: {'application/json': {schema: CountSchema}},
+      },
+    },
+  })
+  async update(
+    @param.path.string('id') id: string,
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(Draft, {partial: true, exclude: ['userId']}),
+        },
+      },
+    })
+    draft: Partial<Draft>,
+  ): Promise<void> {
+    draft.updatedAt = new Date().toISOString()
+    const {count} = await this.draftsRepository.count({id, userId: this.currentUser[securityId]})
+    if (count <= 0) return Promise.reject(new HttpErrors.NotFound('Rascunho não encontrado'))
+    return this.draftsRepository.updateById(id, draft);
+  }
   @del('/users/drafts', {
     responses: {
       '200': {
