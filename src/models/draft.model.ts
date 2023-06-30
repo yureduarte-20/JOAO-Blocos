@@ -10,6 +10,9 @@ export class Draft extends Entity {
   })
   id?: string;
 
+  @property({required: true})
+  title: string
+
   @property({
     type: 'string',
     required: true,
