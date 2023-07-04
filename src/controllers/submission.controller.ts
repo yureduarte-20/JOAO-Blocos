@@ -3,7 +3,7 @@
 import {authenticate, AuthenticationBindings} from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
 import {inject} from '@loopback/core';
-import {Filter, repository} from '@loopback/repository';
+import {Count, Filter, repository} from '@loopback/repository';
 import {get, getModelSchemaRef, param, post, requestBody, response} from '@loopback/rest';
 import {securityId, UserProfile} from '@loopback/security';
 import {Roles, SubmissionStatus} from '../keys';
@@ -86,4 +86,19 @@ export class SubmissionController {
     return this.submissionsRepository.findOne({...filter, where: {...filter?.where, id: problemId, userId: this.user[securityId] as any}})
   }
 
+  @authorize({allowedRoles: [Roles.ADMIN, Roles.ADVISOR, Roles.STUDENT]})
+  @get('/submissions/count')
+  @response(200, {
+    description: 'users submissions',
+    content: {
+      'application/json': {
+        schema: getModelSchemaRef(Submission)
+      }
+    }
+  })
+  async count(
+    @param.filter(Submission) filter?: Filter<Submission>
+  ): Promise<Count> {
+    return this.submissionsRepository.count({...filter?.where, userId: this.user[securityId] as any})
+  }
 }
