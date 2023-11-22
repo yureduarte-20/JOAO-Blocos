@@ -1,6 +1,10 @@
-export * from './issue-admin.controller';
-export * from './language.controller';
+export * from './admin.submission.controller';
+export * from './doubt-problem.controller';
 export * from './ping.controller';
+export * from './problem-doubt.controller';
+export * from './problem.admin.controller';
+export * from './problem.controller';
 export * from './submission.controller';
+export * from './user-draft.controller';
 export * from './user.controller';
 

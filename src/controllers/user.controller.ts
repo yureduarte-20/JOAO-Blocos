@@ -87,7 +87,7 @@ export class UserController {
     })
     if (finded) return Promise.reject(new HttpErrors.UnprocessableEntity("Usuário com email já cadastrado."))
     let password_hashed = await this.userService.hasher.hashPassword(newUser.password);
-    return this.userRepository.create({...newUser, password: password_hashed, role: Roles.CONSUMER})
+    return this.userRepository.create({...newUser, password: password_hashed, role: Roles.STUDENT})
   }
   @authenticate("jwt")
   @get('/profile')
@@ -100,6 +100,6 @@ export class UserController {
   })
   async profile(
   ) {
-    return this.userRepository.findOne({where: {id: this.user[securityId]}})
+    return this.userRepository.findOne({where: {id: this.user[securityId] as any}})
   }
 }

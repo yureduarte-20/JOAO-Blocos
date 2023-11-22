@@ -10,10 +10,12 @@ import {
 } from '@loopback/rest-explorer';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
-import {JudgeServiceBindings, PasswordHasherBindings, UserServiceBindings} from './keys';
+import {DockerServiceBindings, JudgeServiceBindings, NodeJSBindings, PasswordHasherBindings, UserServiceBindings} from './keys';
 import {MySequence} from './sequence';
+import {DockerService} from './services/docker.service';
 import {BcryptHasher} from './services/hash.password';
 import {JudgeService} from './services/judge.service';
+import NodeJSService from './services/nodejs.service';
 import {MyUserService} from './services/user.service';
 export {ApplicationConfig};
 
@@ -33,6 +35,7 @@ export class JudgeApplication extends BootMixin(
     this.configure(RestExplorerBindings.COMPONENT).to({
       path: '/explorer',
     });
+    // this.basePath('/api')
     this.component(RestExplorerComponent);
     this.component(AuthenticationComponent);
     this.component(JWTAuthenticationComponent);
@@ -40,6 +43,8 @@ export class JudgeApplication extends BootMixin(
     this.bind(PasswordHasherBindings.ROUNDS).to(10)
     this.bind(UserServiceBindings.USER_SERVICE).toClass(MyUserService);
     this.bind(JudgeServiceBindings.JUDGE).toClass(JudgeService)
+    this.bind(DockerServiceBindings.DOCKER).toClass(DockerService);
+    this.bind(NodeJSBindings.NODE_JS_SERVICE).toClass(NodeJSService);
     this.projectRoot = __dirname;
     // Customize @loopback/boot Booter Conventions here
     this.bootOptions = {
@@ -48,7 +53,9 @@ export class JudgeApplication extends BootMixin(
         dirs: ['controllers'],
         extensions: ['.controller.js'],
         nested: true,
+
       },
+
     };
   }
 }

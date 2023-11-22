@@ -2,11 +2,25 @@ version: "3" ## especifica a versão do docker-compose file
 
 services:
   ## Define um serviço
-  app:
+  mongo_db_judge:
+   image: mongo
+   container_name: mongo_db_judge_container
+   volumes:
+     - ~/Documentos/docker/mongo:/data/db
+   ports:
+     - 27017:27017
+   environment:
+     - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+     - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+  judge:
     ## nome do serviço
-    build: . ## localização do dockerfile
-    command: npm start ## comando a executar
+    image: judge_image
+    container_name: judge_container
+    depends_on:
+      - mongo_db_judge
+    build: .
     ports:
-      - "3000:3000" ## redirecionamento de porta quando chegar alguma requisição na porta 3000 chama o container na porta 3000
-    volumes:
-      - .:/home/node/app # monitoro a pasta atual . e envio as alterações para /usr/app
+      - ${PORT}:${PORT} ## redirecionamento de porta quando chegar alguma requisição na porta 3000 chama o container na porta 3000
+    env_file:
+      - .env
+

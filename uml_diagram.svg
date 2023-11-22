@@ -1,0 +1,420 @@
+<svg version="1.1" baseProfile="full" width="1594.0" height="823.0" viewbox="0 0 1594 823" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+<desc >#.interface: fill=lightblue
+#.enumeration: fill=lightgreen
+#.type: fill=lightgray
+[Doubt|+id: string \| undefined;+problemTitle: string;+status: DoubtStatus;+tag: string;+advisorName: string \| undefined;+studentName: string;+createdAt: string;+messages: IMessage\[\] \| undefined;+updatedAt: string;+closedAt: string \| undefined;+advisorId: string;+problemId: string;+studentId: string|]
+[&lt;interface&gt;IMessage|+message: string;+userId: string;+createdAt: string|]
+[&lt;interface&gt;DoubtRelations||]
+[&lt;enumeration&gt;DoubtsTags|LOOPS;CONDITIONAL;VARIABLES;INPUT_OUTPUTS;OTHERS]
+[&lt;enumeration&gt;DoubtStatus|COMPLETE;ON_GOING;OPEN]
+[Entity]&lt;:-[Doubt]
+[Doubt]  -  [DoubtStatus]
+[Doubt]  - 0..* [IMessage]
+[Problem|+id: string \| undefined;+title: string;+description: string \| undefined;+testCases: ITestCase\[\];+dificultyLevel: string;+submissions: Submission\[\] \| undefined;+demonstrations: IDemonstrations\[\];+doubts: Doubt\[\]|]
+[&lt;interface&gt;ITestCase|+inputs: string\[\] \| undefined;+outputs: string;+validationOutputRegex: string \| undefined|]
+[&lt;interface&gt;IDemonstrations|+demonstrationInputs: string\[\] \| undefined;+demonstrationOutput: string|]
+[&lt;interface&gt;ProblemRelations||]
+[Entity]&lt;:-[Problem]
+[Problem]  - 0..* [ITestCase]
+[Problem]  - 0..* [Submission]
+[Problem]  - 0..* [IDemonstrations]
+[Problem]  - 0..* [Doubt]
+[Submission|+id: string \| undefined;+userId: string;+problemId: string;+code: string \| undefined;+status: SubmissionStatus;+blocksXml: string;+error: string \| undefined;+createdAt: Date;+results: SubmissionStatus\[\] \| undefined;+successfulRate: number|]
+[&lt;interface&gt;SubmissionRelations||]
+[Entity]&lt;:-[Submission]
+[User|+id: string \| undefined;+name: string;+email: string;+password: string;+role: string;+submissions: Submission\[\];+doubts: Doubt\[\];+studentDoubts: Doubt\[\]|]
+[&lt;interface&gt;UserRelations||]
+[Entity]&lt;:-[User]
+[User]  - 0..* [Submission]
+[User]  - 0..* [Doubt]
+[User]  - 0..* [Doubt]</desc>
+<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
+<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
+<g stroke="transparent" fill="transparent">
+<rect x="0.0" y="0.0" height="823.0" width="1594.0" stroke="none"></rect>
+</g>
+<g transform="translate(8, 8)" fill="#33322E">
+<g transform="translate(20, 20)" fill="#33322E" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
+<path d="M650.7 70.2 L315.75 142 L315.75 249.5 L315.75 249.5 L315.75 357 L315.75 357 L292.75 377 L292.8 377.0 " fill="none"></path>
+<path d="M651.8 75.4 L650.7 70.2 L649.6 65.0 L663.8 67.4 Z"></path>
+<path d="M73.8 627.0 L61.75 647 L61.75 671 L61.8 671.0 " fill="none"></path>
+<text x="244.3" y="659.0" stroke="none">0..*</text>
+<path d="M224.2 627.0 L236.25 647 L236.25 667 L236.3 667.0 " fill="none"></path>
+<path d="M711.1 87.7 L746.5 142 L746.5 162 L746.5 162.0 " fill="none"></path>
+<path d="M715.6 84.8 L711.1 87.7 L706.7 90.6 L703.8 76.5 Z"></path>
+<text x="566.0" y="444.0" stroke="none">0..*</text>
+<path d="M628.1 337.0 L601 357 L601 452 L601.0 452.0 " fill="none"></path>
+<text x="1407.3" y="391.5" stroke="none">0..*</text>
+<path d="M911.0 276.1 L1411 357 L1399.2758620689656 399.5 L1399.3 399.5 " fill="none"></path>
+<text x="999.0" y="451.5" stroke="none">0..*</text>
+<path d="M911.0 321.8 L991 357 L991 459.5 L991.0 459.5 " fill="none"></path>
+<text x="189.9" y="369.0" stroke="none">0..*</text>
+<path d="M582.0 284.2 L237 357 L224.86206896551724 377 L224.9 377.0 " fill="none"></path>
+<path d="M737.0 66.7 L1303.25 142 L1303.25 249.5 L1303.25 249.5 L1303.25 357 L1303.25 357 L1323.1077586206898 399.5 L1323.1 399.5 " fill="none"></path>
+<path d="M737.7 61.5 L737.0 66.7 L736.3 72.0 L723.8 65.0 Z"></path>
+<path d="M650.6 67.5 L158.25 142 L158.25 162 L158.3 162.0 " fill="none"></path>
+<path d="M651.4 72.8 L650.6 67.5 L649.8 62.3 L663.8 65.5 Z"></path>
+<text x="1258.8" y="391.5" stroke="none">0..*</text>
+<path d="M275.8 261.6 L1201 357 L1250.8275862068965 399.5 L1250.8 399.5 " fill="none"></path>
+<text x="122.0" y="369.0" stroke="none">0..*</text>
+<path d="M158.3 337.0 L158.25 357 L156.97413793103448 377 L157.0 377.0 " fill="none"></path>
+<text x="28.9" y="369.0" stroke="none">0..*</text>
+<path d="M70.3 337.0 L50.25 357 L63.87068965517241 377 L63.9 377.0 " fill="none"></path>
+<g data-name="Doubt">
+<g fill="#eee8d5" stroke="#33322E" data-name="Doubt">
+<rect x="0.0" y="377.0" height="250.0" width="298.0" data-name="Doubt"></rect>
+<path d="M0.0 408.0 L298.0 408.0" fill="none" data-name="Doubt"></path>
+<path d="M0.0 619.0 L298.0 619.0" fill="none" data-name="Doubt"></path>
+</g>
+<g transform="translate(0, 377)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Doubt">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Doubt">
+<a id="src/models/doubt.model.ts.Doubt" xlink:href="src/models/doubt.model.ts"><text x="141.0" y="13.5" stroke="none" text-anchor="middle" data-name="Doubt">Doubt</text></a>
+
+</g>
+</g>
+<g transform="translate(0, 408)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Doubt">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Doubt">
+<text x="0.0" y="13.5" stroke="none" data-name="Doubt">+id: string | undefined</text>
+<text x="0.0" y="28.5" stroke="none" data-name="Doubt">+problemTitle: string</text>
+<text x="0.0" y="43.5" stroke="none" data-name="Doubt">+status: DoubtStatus</text>
+<text x="0.0" y="58.5" stroke="none" data-name="Doubt">+tag: string</text>
+<text x="0.0" y="73.5" stroke="none" data-name="Doubt">+advisorName: string | undefined</text>
+<text x="0.0" y="88.5" stroke="none" data-name="Doubt">+studentName: string</text>
+<text x="0.0" y="103.5" stroke="none" data-name="Doubt">+createdAt: string</text>
+<text x="0.0" y="118.5" stroke="none" data-name="Doubt">+messages: IMessage[] | undefined</text>
+<text x="0.0" y="133.5" stroke="none" data-name="Doubt">+updatedAt: string</text>
+<text x="0.0" y="148.5" stroke="none" data-name="Doubt">+closedAt: string | undefined</text>
+<text x="0.0" y="163.5" stroke="none" data-name="Doubt">+advisorId: string</text>
+<text x="0.0" y="178.5" stroke="none" data-name="Doubt">+problemId: string</text>
+<text x="0.0" y="193.5" stroke="none" data-name="Doubt">+studentId: string</text>
+
+</g>
+</g>
+<g transform="translate(0, 619)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Doubt">
+<g transform="translate(8, 8)" fill="#33322E" data-name="Doubt">
+
+</g>
+</g>
+</g>
+<g data-name="IMessage">
+<g fill="lightblue" stroke="#33322E" data-name="IMessage">
+<rect x="158.3" y="667.0" height="100.0" width="156.0" data-name="IMessage"></rect>
+<path d="M158.3 698.0 L314.3 698.0" fill="none" data-name="IMessage"></path>
+<path d="M158.3 759.0 L314.3 759.0" fill="none" data-name="IMessage"></path>
+</g>
+<g transform="translate(158.25, 667)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IMessage">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IMessage">
+<a id="src/models/doubt.model.ts.IMessage" xlink:href="src/models/doubt.model.ts"><text x="70.0" y="13.5" stroke="none" text-anchor="middle" data-name="IMessage">IMessage</text></a>
+
+</g>
+</g>
+<g transform="translate(158.25, 698)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IMessage">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IMessage">
+<text x="0.0" y="13.5" stroke="none" data-name="IMessage">+message: string</text>
+<text x="0.0" y="28.5" stroke="none" data-name="IMessage">+userId: string</text>
+<text x="0.0" y="43.5" stroke="none" data-name="IMessage">+createdAt: string</text>
+
+</g>
+</g>
+<g transform="translate(158.25, 759)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IMessage">
+<g transform="translate(8, 8)" fill="#33322E" data-name="IMessage">
+
+</g>
+</g>
+</g>
+<g data-name="DoubtRelations">
+<g fill="lightblue" stroke="#33322E" data-name="DoubtRelations">
+<rect x="291.8" y="37.5" height="47.0" width="137.0" data-name="DoubtRelations"></rect>
+<path d="M291.8 68.5 L428.8 68.5" fill="none" data-name="DoubtRelations"></path>
+<path d="M291.8 76.5 L428.8 76.5" fill="none" data-name="DoubtRelations"></path>
+</g>
+<g transform="translate(291.75, 37.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DoubtRelations">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DoubtRelations">
+<a id="src/models/doubt.model.ts.DoubtRelations" xlink:href="src/models/doubt.model.ts"><text x="60.5" y="13.5" stroke="none" text-anchor="middle" data-name="DoubtRelations">DoubtRelations</text></a>
+
+</g>
+</g>
+<g transform="translate(291.75, 68.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DoubtRelations">
+<g transform="translate(8, 8)" fill="#33322E" data-name="DoubtRelations">
+
+</g>
+</g>
+<g transform="translate(291.75, 76.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DoubtRelations">
+<g transform="translate(8, 8)" fill="#33322E" data-name="DoubtRelations">
+
+</g>
+</g>
+</g>
+<g data-name="DoubtsTags">
+<g fill="lightgreen" stroke="#33322E" data-name="DoubtsTags">
+<rect x="468.8" y="0.0" height="122.0" width="155.0" data-name="DoubtsTags"></rect>
+<path d="M468.8 31.0 L623.8 31.0" fill="none" data-name="DoubtsTags"></path>
+</g>
+<g transform="translate(468.75, 0)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DoubtsTags">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DoubtsTags">
+<a id="src/models/doubt.model.ts.DoubtsTags" xlink:href="src/models/doubt.model.ts"><text x="69.5" y="13.5" stroke="none" text-anchor="middle" data-name="DoubtsTags">DoubtsTags</text></a>
+
+</g>
+</g>
+<g transform="translate(468.75, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DoubtsTags">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DoubtsTags">
+<text x="0.0" y="13.5" stroke="none" data-name="DoubtsTags">LOOPS</text>
+<text x="0.0" y="28.5" stroke="none" data-name="DoubtsTags">CONDITIONAL</text>
+<text x="0.0" y="43.5" stroke="none" data-name="DoubtsTags">VARIABLES</text>
+<text x="0.0" y="58.5" stroke="none" data-name="DoubtsTags">INPUT_OUTPUTS</text>
+<text x="0.0" y="73.5" stroke="none" data-name="DoubtsTags">OTHERS</text>
+
+</g>
+</g>
+</g>
+<g data-name="DoubtStatus">
+<g fill="lightgreen" stroke="#33322E" data-name="DoubtStatus">
+<rect x="5.3" y="671.0" height="92.0" width="113.0" data-name="DoubtStatus"></rect>
+<path d="M5.3 702.0 L118.3 702.0" fill="none" data-name="DoubtStatus"></path>
+</g>
+<g transform="translate(5.25, 671)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DoubtStatus">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DoubtStatus">
+<a id="src/models/doubt.model.ts.DoubtStatus" xlink:href="src/models/doubt.model.ts"><text x="48.5" y="13.5" stroke="none" text-anchor="middle" data-name="DoubtStatus">DoubtStatus</text></a>
+
+</g>
+</g>
+<g transform="translate(5.25, 702)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DoubtStatus">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DoubtStatus">
+<text x="0.0" y="13.5" stroke="none" data-name="DoubtStatus">COMPLETE</text>
+<text x="0.0" y="28.5" stroke="none" data-name="DoubtStatus">ON_GOING</text>
+<text x="0.0" y="43.5" stroke="none" data-name="DoubtStatus">OPEN</text>
+
+</g>
+</g>
+</g>
+<g data-name="Entity">
+<g fill="#eee8d5" stroke="#33322E" data-name="Entity">
+<rect x="663.8" y="45.5" height="31.0" width="60.0" data-name="Entity"></rect>
+</g>
+<g transform="translate(663.75, 45.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Entity">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Entity">
+<text x="22.0" y="13.5" stroke="none" text-anchor="middle" data-name="Entity">Entity</text>
+
+</g>
+</g>
+</g>
+<g data-name="Problem">
+<g fill="#eee8d5" stroke="#33322E" data-name="Problem">
+<rect x="582.0" y="162.0" height="175.0" width="329.0" data-name="Problem"></rect>
+<path d="M582.0 193.0 L911.0 193.0" fill="none" data-name="Problem"></path>
+<path d="M582.0 329.0 L911.0 329.0" fill="none" data-name="Problem"></path>
+</g>
+<g transform="translate(582, 162)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Problem">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Problem">
+<a id="src/models/problem.model.ts.Problem" xlink:href="src/models/problem.model.ts"><text x="156.5" y="13.5" stroke="none" text-anchor="middle" data-name="Problem">Problem</text></a>
+
+</g>
+</g>
+<g transform="translate(582, 193)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Problem">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Problem">
+<text x="0.0" y="13.5" stroke="none" data-name="Problem">+id: string | undefined</text>
+<text x="0.0" y="28.5" stroke="none" data-name="Problem">+title: string</text>
+<text x="0.0" y="43.5" stroke="none" data-name="Problem">+description: string | undefined</text>
+<text x="0.0" y="58.5" stroke="none" data-name="Problem">+testCases: ITestCase[]</text>
+<text x="0.0" y="73.5" stroke="none" data-name="Problem">+dificultyLevel: string</text>
+<text x="0.0" y="88.5" stroke="none" data-name="Problem">+submissions: Submission[] | undefined</text>
+<text x="0.0" y="103.5" stroke="none" data-name="Problem">+demonstrations: IDemonstrations[]</text>
+<text x="0.0" y="118.5" stroke="none" data-name="Problem">+doubts: Doubt[]</text>
+
+</g>
+</g>
+<g transform="translate(582, 329)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Problem">
+<g transform="translate(8, 8)" fill="#33322E" data-name="Problem">
+
+</g>
+</g>
+</g>
+<g data-name="ITestCase">
+<g fill="lightblue" stroke="#33322E" data-name="ITestCase">
+<rect x="424.0" y="452.0" height="100.0" width="354.0" data-name="ITestCase"></rect>
+<path d="M424.0 483.0 L778.0 483.0" fill="none" data-name="ITestCase"></path>
+<path d="M424.0 544.0 L778.0 544.0" fill="none" data-name="ITestCase"></path>
+</g>
+<g transform="translate(424, 452)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ITestCase">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ITestCase">
+<a id="src/models/problem.model.ts.ITestCase" xlink:href="src/models/problem.model.ts"><text x="169.0" y="13.5" stroke="none" text-anchor="middle" data-name="ITestCase">ITestCase</text></a>
+
+</g>
+</g>
+<g transform="translate(424, 483)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ITestCase">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ITestCase">
+<text x="0.0" y="13.5" stroke="none" data-name="ITestCase">+inputs: string[] | undefined</text>
+<text x="0.0" y="28.5" stroke="none" data-name="ITestCase">+outputs: string</text>
+<text x="0.0" y="43.5" stroke="none" data-name="ITestCase">+validationOutputRegex: string | undefined</text>
+
+</g>
+</g>
+<g transform="translate(424, 544)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ITestCase">
+<g transform="translate(8, 8)" fill="#33322E" data-name="ITestCase">
+
+</g>
+</g>
+</g>
+<g data-name="IDemonstrations">
+<g fill="lightblue" stroke="#33322E" data-name="IDemonstrations">
+<rect x="818.0" y="459.5" height="85.0" width="346.0" data-name="IDemonstrations"></rect>
+<path d="M818.0 490.5 L1164.0 490.5" fill="none" data-name="IDemonstrations"></path>
+<path d="M818.0 536.5 L1164.0 536.5" fill="none" data-name="IDemonstrations"></path>
+</g>
+<g transform="translate(818, 459.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IDemonstrations">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IDemonstrations">
+<a id="src/models/problem.model.ts.IDemonstrations" xlink:href="src/models/problem.model.ts"><text x="165.0" y="13.5" stroke="none" text-anchor="middle" data-name="IDemonstrations">IDemonstrations</text></a>
+
+</g>
+</g>
+<g transform="translate(818, 490.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IDemonstrations">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IDemonstrations">
+<text x="0.0" y="13.5" stroke="none" data-name="IDemonstrations">+demonstrationInputs: string[] | undefined</text>
+<text x="0.0" y="28.5" stroke="none" data-name="IDemonstrations">+demonstrationOutput: string</text>
+
+</g>
+</g>
+<g transform="translate(818, 536.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IDemonstrations">
+<g transform="translate(8, 8)" fill="#33322E" data-name="IDemonstrations">
+
+</g>
+</g>
+</g>
+<g data-name="ProblemRelations">
+<g fill="lightblue" stroke="#33322E" data-name="ProblemRelations">
+<rect x="763.8" y="37.5" height="47.0" width="155.0" data-name="ProblemRelations"></rect>
+<path d="M763.8 68.5 L918.8 68.5" fill="none" data-name="ProblemRelations"></path>
+<path d="M763.8 76.5 L918.8 76.5" fill="none" data-name="ProblemRelations"></path>
+</g>
+<g transform="translate(763.75, 37.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ProblemRelations">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ProblemRelations">
+<a id="src/models/problem.model.ts.ProblemRelations" xlink:href="src/models/problem.model.ts"><text x="69.5" y="13.5" stroke="none" text-anchor="middle" data-name="ProblemRelations">ProblemRelations</text></a>
+
+</g>
+</g>
+<g transform="translate(763.75, 68.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ProblemRelations">
+<g transform="translate(8, 8)" fill="#33322E" data-name="ProblemRelations">
+
+</g>
+</g>
+<g transform="translate(763.75, 76.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ProblemRelations">
+<g transform="translate(8, 8)" fill="#33322E" data-name="ProblemRelations">
+
+</g>
+</g>
+</g>
+<g data-name="Submission">
+<g fill="#eee8d5" stroke="#33322E" data-name="Submission">
+<rect x="1204.0" y="399.5" height="205.0" width="334.0" data-name="Submission"></rect>
+<path d="M1204.0 430.5 L1538.0 430.5" fill="none" data-name="Submission"></path>
+<path d="M1204.0 596.5 L1538.0 596.5" fill="none" data-name="Submission"></path>
+</g>
+<g transform="translate(1204, 399.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Submission">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Submission">
+<a id="src/models/submission.model.ts.Submission" xlink:href="src/models/submission.model.ts"><text x="159.0" y="13.5" stroke="none" text-anchor="middle" data-name="Submission">Submission</text></a>
+
+</g>
+</g>
+<g transform="translate(1204, 430.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Submission">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Submission">
+<text x="0.0" y="13.5" stroke="none" data-name="Submission">+id: string | undefined</text>
+<text x="0.0" y="28.5" stroke="none" data-name="Submission">+userId: string</text>
+<text x="0.0" y="43.5" stroke="none" data-name="Submission">+problemId: string</text>
+<text x="0.0" y="58.5" stroke="none" data-name="Submission">+code: string | undefined</text>
+<text x="0.0" y="73.5" stroke="none" data-name="Submission">+status: SubmissionStatus</text>
+<text x="0.0" y="88.5" stroke="none" data-name="Submission">+blocksXml: string</text>
+<text x="0.0" y="103.5" stroke="none" data-name="Submission">+error: string | undefined</text>
+<text x="0.0" y="118.5" stroke="none" data-name="Submission">+createdAt: Date</text>
+<text x="0.0" y="133.5" stroke="none" data-name="Submission">+results: SubmissionStatus[] | undefined</text>
+<text x="0.0" y="148.5" stroke="none" data-name="Submission">+successfulRate: number</text>
+
+</g>
+</g>
+<g transform="translate(1204, 596.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Submission">
+<g transform="translate(8, 8)" fill="#33322E" data-name="Submission">
+
+</g>
+</g>
+</g>
+<g data-name="SubmissionRelations">
+<g fill="lightblue" stroke="#33322E" data-name="SubmissionRelations">
+<rect x="958.8" y="37.5" height="47.0" width="181.0" data-name="SubmissionRelations"></rect>
+<path d="M958.8 68.5 L1139.8 68.5" fill="none" data-name="SubmissionRelations"></path>
+<path d="M958.8 76.5 L1139.8 76.5" fill="none" data-name="SubmissionRelations"></path>
+</g>
+<g transform="translate(958.75, 37.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SubmissionRelations">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SubmissionRelations">
+<a id="src/models/submission.model.ts.SubmissionRelations" xlink:href="src/models/submission.model.ts"><text x="82.5" y="13.5" stroke="none" text-anchor="middle" data-name="SubmissionRelations">SubmissionRelations</text></a>
+
+</g>
+</g>
+<g transform="translate(958.75, 68.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SubmissionRelations">
+<g transform="translate(8, 8)" fill="#33322E" data-name="SubmissionRelations">
+
+</g>
+</g>
+<g transform="translate(958.75, 76.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SubmissionRelations">
+<g transform="translate(8, 8)" fill="#33322E" data-name="SubmissionRelations">
+
+</g>
+</g>
+</g>
+<g data-name="User">
+<g fill="#eee8d5" stroke="#33322E" data-name="User">
+<rect x="40.8" y="162.0" height="175.0" width="235.0" data-name="User"></rect>
+<path d="M40.8 193.0 L275.8 193.0" fill="none" data-name="User"></path>
+<path d="M40.8 329.0 L275.8 329.0" fill="none" data-name="User"></path>
+</g>
+<g transform="translate(40.75, 162)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="User">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="User">
+<a id="src/models/user.model.ts.User" xlink:href="src/models/user.model.ts"><text x="109.5" y="13.5" stroke="none" text-anchor="middle" data-name="User">User</text></a>
+
+</g>
+</g>
+<g transform="translate(40.75, 193)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="User">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="User">
+<text x="0.0" y="13.5" stroke="none" data-name="User">+id: string | undefined</text>
+<text x="0.0" y="28.5" stroke="none" data-name="User">+name: string</text>
+<text x="0.0" y="43.5" stroke="none" data-name="User">+email: string</text>
+<text x="0.0" y="58.5" stroke="none" data-name="User">+password: string</text>
+<text x="0.0" y="73.5" stroke="none" data-name="User">+role: string</text>
+<text x="0.0" y="88.5" stroke="none" data-name="User">+submissions: Submission[]</text>
+<text x="0.0" y="103.5" stroke="none" data-name="User">+doubts: Doubt[]</text>
+<text x="0.0" y="118.5" stroke="none" data-name="User">+studentDoubts: Doubt[]</text>
+
+</g>
+</g>
+<g transform="translate(40.75, 329)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="User">
+<g transform="translate(8, 8)" fill="#33322E" data-name="User">
+
+</g>
+</g>
+</g>
+<g data-name="UserRelations">
+<g fill="lightblue" stroke="#33322E" data-name="UserRelations">
+<rect x="1179.8" y="37.5" height="47.0" width="127.0" data-name="UserRelations"></rect>
+<path d="M1179.8 68.5 L1306.8 68.5" fill="none" data-name="UserRelations"></path>
+<path d="M1179.8 76.5 L1306.8 76.5" fill="none" data-name="UserRelations"></path>
+</g>
+<g transform="translate(1179.75, 37.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="UserRelations">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="UserRelations">
+<a id="src/models/user.model.ts.UserRelations" xlink:href="src/models/user.model.ts"><text x="55.5" y="13.5" stroke="none" text-anchor="middle" data-name="UserRelations">UserRelations</text></a>
+
+</g>
+</g>
+<g transform="translate(1179.75, 68.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="UserRelations">
+<g transform="translate(8, 8)" fill="#33322E" data-name="UserRelations">
+
+</g>
+</g>
+<g transform="translate(1179.75, 76.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="UserRelations">
+<g transform="translate(8, 8)" fill="#33322E" data-name="UserRelations">
+
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</svg>

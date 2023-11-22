@@ -1,24 +1,26 @@
 import {Entity, hasMany, model, property} from '@loopback/repository';
+import {Doubt} from './doubt.model';
 import {Submission} from './submission.model';
+import {Draft} from './draft.model';
+
 @model({
   settings: {
-    hiddenProperties: ['password'],
     mysql: {
       table: 'users'
     },
     postgresql: {
       table: 'users'
-    }
+    },
   }
 })
 export class User extends Entity {
   @property({
-    type: 'String',
+    type: 'string',
     id: true,
-    defaultFn: 'uuid',
+    generated: true,
     postgresql: {
       columnName: 'id',
-      dataType: 'uuid',
+      dataType: 'INTEGER',
     },
   })
   id?: string;
@@ -35,11 +37,9 @@ export class User extends Entity {
     jsonSchema: {
       format: 'email',
     },
-    index: {
-      unique: true
-    }
-
-
+    /*     index: {
+          unique: true
+        } */
   })
   email: string;
 
@@ -47,6 +47,7 @@ export class User extends Entity {
     type: 'string',
     required: true,
     minLength: 8,
+    hidden: true,
     jsonSchema: {
       minLength: 8,
     },
@@ -70,6 +71,16 @@ export class User extends Entity {
   role: string;
   @hasMany(() => Submission, {name: 'submissions'})
   submissions: Submission[];
+
+  @hasMany(() => Doubt, {keyTo: 'advisorId'})
+  doubts: Doubt[];
+
+  @hasMany(() => Doubt, {keyTo: 'studentId'})
+  studentDoubts: Doubt[];
+
+  @hasMany(() => Draft)
+  drafts: Draft[];
+
   constructor(data?: Partial<User>) {
     super(data);
   }

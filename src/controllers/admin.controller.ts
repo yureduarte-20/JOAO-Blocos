@@ -1,3 +1,5 @@
+//import {authenticate} from '@loopback/authentication';
+//import {authorize} from '@loopback/authorization';
 import {authenticate} from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
 import {inject} from '@loopback/core';
@@ -12,8 +14,11 @@ import {
 import {
   del, get,
   getModelSchemaRef, HttpErrors, param, patch, post, put, requestBody,
-  response
+  Response,
+  response,
+  RestBindings
 } from '@loopback/rest';
+import {execFileSync} from 'child_process';
 import {Roles, UserServiceBindings} from '../keys';
 import {User} from '../models';
 import {UserRepository} from '../repositories';
@@ -22,6 +27,7 @@ import {MyUserService} from '../services/user.service';
 @authorize({allowedRoles: [Roles.ADMIN]})
 export class AdminController {
   constructor(
+    @inject(RestBindings.Http.RESPONSE) private response: Response,
     @repository(UserRepository)
     public userRepository: UserRepository,
     @inject(UserServiceBindings.USER_SERVICE)
@@ -156,4 +162,18 @@ export class AdminController {
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.userRepository.deleteById(id);
   }
+  @get('/admin/files/download/db')
+  async download(): Promise<any> {
+    const absPath = execFileSync('pwd').toString().trimEnd();
+    const filepath = absPath + '/src/datasources/db.json';
+    // @todo set headers for content type, length and caching
+    return await new Promise<void>((resolve, reject) => {
+
+      this.response.download(filepath, (err: any) => {
+        if (err) return reject();
+        return resolve();
+      })
+    })
+  }
+
 }

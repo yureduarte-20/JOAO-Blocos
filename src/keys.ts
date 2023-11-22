@@ -1,8 +1,10 @@
 import {UserService} from '@loopback/authentication';
 import {BindingKey} from '@loopback/core';
 import {User} from './models';
+import {DockerService} from './services/docker.service';
 import {PasswordHasher} from './services/hash.password';
 import {JudgeService} from './services/judge.service';
+import NodeJSService from './services/nodejs.service';
 import {Credentials} from './types';
 export namespace UserServiceBindings {
   export const USER_SERVICE = BindingKey.create<UserService<Credentials, User>>(
@@ -17,17 +19,25 @@ export namespace PasswordHasherBindings {
 }
 
 export namespace JudgeServiceBindings {
-  export const JUDGE = BindingKey.create<JudgeService>('services.judge')
+  export const JUDGE = BindingKey.create<JudgeService>('services.judge');
 }
-
+export namespace DockerServiceBindings {
+  export const DOCKER = BindingKey.create<DockerService>('services.docker');
+}
+export namespace NodeJSBindings {
+  export const NODE_JS_SERVICE = BindingKey.create<NodeJSService>('services.nodejs')
+}
 export const enum Roles {
   ADMIN = 'ADMIN',
-  COLLABORATOR = 'COLLABORATOR',
-  CONSUMER = 'CONSUMER'
+  ADVISOR = 'ADVISOR',
+  STUDENT = 'STUDENT'
 }
 export const enum SubmissionStatus {
-  ACCEPTED = 'Accepted',
-  TIME_LIMIT_EXCEEDED = 'Time limit exceeded',
-  PRESENTATION_ERROR = 'Presentation Error',
-  RUNTIME_ERROR = 'Runtime Error'
+  ACCEPTED = 'ACCEPTED',
+  TIME_LIMIT_EXCEEDED = 'TIME_LIMIT_EXCEEDED',
+  PRESENTATION_ERROR = 'PRESENTATION_ERROR',
+  PENDING = 'PENDING',
+  RUNTIME_ERROR = 'RUNTIME_ERROR',
+  COMPILATION_ERROR = 'COMPILATION_ERROR',
+  WRONG_ANSWER = 'WRONG_ANSWER'
 }

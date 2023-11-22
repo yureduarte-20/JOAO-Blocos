@@ -1,103 +1,103 @@
 import {belongsTo, Entity, model, property} from '@loopback/repository';
-import {Issue} from './issue.model';
-import {Language} from './language.model';
+import {SubmissionStatus} from '../keys';
+import {Problem} from './problem.model';
 import {User} from './user.model';
 
 @model({
   settings: {
-    strict: true,
-    allowExtendedOperators: true,
-    foreignKeys: {
-      fk_submission_userId: {
-        name: 'fk_submission_userId',
-        entity: 'User',
-        entityKey: 'id',
-        foreignKey: 'userid',
-        onDelete: 'CASCADE',
-        onUpdate: 'SET NULL'
-      },
-      fk_submission_issueId: {
-        name: 'fk_submission_issueId',
-        entity: 'Issue',
-        entityKey: 'id',
-        foreignKey: 'issueid',
-        onDelete: 'CASCADE',
-        onUpdate: 'SET NULL'
-      },
-      fk_submission_languageId: {
-        name: 'fk_submission_languageId',
-        entity: 'Language',
-        entityKey: 'id',
-        foreignKey: 'languageid',
-        onDelete: 'CASCADE',
-        onUpdate: 'SET NULL'
-      },
-    }
+    //allowExtendedOperators: true,
+    /*     foreignKeys: {
+          fk_submission_userId: {
+            name: 'fk_submission_userId',
+            entity: 'User',
+            entityKey: 'id',
+            foreignKey: 'userid',
+            onDelete: 'CASCADE',
+            onUpdate: 'SET NULL'
+          },
+          fk_submission_issueId: {
+            name: 'fk_submission_issueId',
+            entity: 'Issue',
+            entityKey: 'id',
+            foreignKey: 'issueid',
+            onDelete: 'CASCADE',
+            onUpdate: 'SET NULL'
+          },
+        } */
   }
 })
 export class Submission extends Entity {
   @property({
-    type: 'String',
+    type: 'string',
     id: true,
-    defaultFn: 'uuid',
+    generated: true,
     postgresql: {
       columnName: 'id',
-      dataType: 'uuid',
+      dataType: 'INTEGER',
     },
   })
   id?: string;
   @belongsTo(() => User, {name: 'owner'}, {
+    type: 'string',
+    hidden: true,
     postgresql: {
-      dataType: 'uuid',
+      dataType: 'INTEGER',
       nullable: 'NO',
     },
     required: true
   })
   userId: string;
 
-  @belongsTo(() => Issue, {name: 'issue'}, {
+  @belongsTo(() => Problem, {name: 'problem'}, {
+    type: 'string',
     postgresql: {
-      dataType: 'uuid',
+      dataType: 'INTEGER',
       nullable: 'NO',
     },
     required: true
   })
-  issueId: string;
+  problemId: string;
 
+
+  @property({
+    type: 'string',
+  })
+  code?: string;
 
   @property({
     type: 'string',
     required: true,
   })
-  code: string;
+  status: SubmissionStatus;
 
   @property({
     type: 'string',
-    required: true,
-  })
-  status: string;
-
-  @belongsTo(() => Language, {name: 'language'}, {
-    type: 'String',
-    postgresql: {
-      dataType: 'uuid',
-      nullable: 'NO',
-    },
     required: true
   })
-  languageId: string;
+  blocksXml: string
   @property({
-    type: 'string'
+    type: 'string',
   })
-  blocksXml?: string
-
+  error?: string
+  @property({
+    type: 'date',
+    defaultFn: 'now',
+    postgresql: {
+      columnName: 'created_at',
+    }
+  })
+  createdAt: Date;
+  @property.array(Object, {hidden: true})
+  results?: SubmissionStatus[]
+  @property({type: 'number', default: 0})
+  successfulRate: number
   constructor(data?: Partial<Submission>) {
     super(data);
   }
 }
 
 export interface SubmissionRelations {
-  // describe navigational properties here
+
 }
 
 export type SubmissionWithRelations = Submission & SubmissionRelations;
