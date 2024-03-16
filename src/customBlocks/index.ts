@@ -15,14 +15,14 @@ b.Blocks['round_with_digits'] = {
         this.setHelpUrl("");
     }
 };
-b.JavaScript['round_with_digits'] = function (block: any, generator: any = Blockly.JavaScript) {
-    let value_target = generator.valueToCode(block, 'target', Blockly.JavaScript.ORDER_ATOMIC);
+b.JavaScript['round_with_digits'] = function (block: any, generator: any = b.JavaScript) {
+    let value_target = generator.valueToCode(block, 'target', b.JavaScript.ORDER_ATOMIC);
     let number_float_point = block.getFieldValue('float_point');
     value_target = value_target === '' ? '0' : value_target;
     // Montar o código para realizar o arredondamento com os dígitos especificados
     let code = + 'Number(' + value_target + ').toFixed(' + number_float_point + ')';
 
-    return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    return [code, b.JavaScript.ORDER_FUNCTION_CALL];
 };
 
 b.Python['round_with_digits'] = function (block: any, generator: any = b.Python) {
@@ -59,3 +59,4 @@ b.Dart['round_with_digits'] = function (block: any, generator = b.Dart) {
 
     return [code, b.Dart.ORDER_FUNCTION_CALL];
 };
+export default b

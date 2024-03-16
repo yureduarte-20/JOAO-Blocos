@@ -1,6 +1,7 @@
 import {inject} from '@loopback/core';
 import {repository} from '@loopback/repository';
-import Blockly from 'blockly';
+import Blockly from '../customBlocks';
+
 import {execSync} from 'child_process';
 import {unlink, writeFileSync} from 'fs';
 import cron, {ScheduledTask} from 'node-cron';
