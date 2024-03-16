@@ -19,9 +19,10 @@ b.JavaScript['round_with_digits'] = function (block: any, generator: any = b.Jav
     let value_target = generator.valueToCode(block, 'target', b.JavaScript.ORDER_ATOMIC);
     let number_float_point = block.getFieldValue('float_point');
     value_target = value_target === '' ? '0' : value_target;
+
     // Montar o código para realizar o arredondamento com os dígitos especificados
     let code = + 'Number(' + value_target + ').toFixed(' + number_float_point + ')';
-
+    code = `Number(${value_target}).toFixed(${number_float_point})`
     return [code, b.JavaScript.ORDER_FUNCTION_CALL];
 };
 
