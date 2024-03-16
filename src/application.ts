@@ -10,6 +10,7 @@ import {
 } from '@loopback/rest-explorer';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
+import './customBlocks';
 import {DockerServiceBindings, JudgeServiceBindings, NodeJSBindings, PasswordHasherBindings, UserServiceBindings} from './keys';
 import {MySequence} from './sequence';
 import {DockerService} from './services/docker.service';
