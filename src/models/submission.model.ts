@@ -87,7 +87,7 @@ export class Submission extends Entity {
     }
   })
   createdAt: Date;
-  @property.array(Object, {hidden: true})
+  @property.array(String, {hidden: true})
   results?: SubmissionStatus[]
   @property({type: 'number', default: 0})
   successfulRate: number
