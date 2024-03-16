@@ -4,8 +4,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 const config = {
   name: 'Mongo',
-  //connector: 'mongodb',
-  connector: 'memory',
+  connector: 'mongodb',
+  //connector: 'memory',
   url: process.env.MONGO_URL,
   useNewUrlParser: true,
   useUnifiedTopology: true
