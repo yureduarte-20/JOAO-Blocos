@@ -8,3 +8,4 @@ export * from './submission.controller';
 export * from './user-draft.controller';
 export * from './user.controller';
 
+export * from './password.controller';

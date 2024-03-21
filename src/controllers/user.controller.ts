@@ -4,7 +4,7 @@ import {
 } from '@loopback/authentication-jwt';
 import {inject} from '@loopback/core';
 import {repository} from '@loopback/repository';
-import {get, getModelSchemaRef, HttpErrors, post, requestBody, response} from '@loopback/rest';
+import {get, getModelSchemaRef, HttpErrors, patch, post, requestBody, response} from '@loopback/rest';
 import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import {Roles} from '../keys';
 import {User} from '../models';
@@ -101,5 +101,30 @@ export class UserController {
   async profile(
   ) {
     return this.userRepository.findOne({where: {id: this.user[securityId] as any}})
+  }
+
+  @patch('/profile')
+  @response(204)
+  @authenticate("jwt")
+  public async changeUserName(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: {
+            properties: {
+              name: {
+                type: "string",
+
+              }
+            },
+            required: ['name']
+          },
+        }
+      }
+    })
+    {name}: {name: string}
+  ) {
+    const user = await this.userRepository.findById(this.user[securityId])
+    await this.userRepository.updateById(user.id, {name})
   }
 }
